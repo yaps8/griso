@@ -27,7 +27,6 @@ typedef HANDLE pthread_t;
 
 #include <semaphore.h>
 #include <stdlib.h>
-//#include "mdec.h"
 #include "graphIO.h"
 //#include "graph_import.h"
 //#include "reduction.h"
@@ -327,7 +326,7 @@ int main(int argc, char* argv[]){
 					graph_t* graph;
 					int k=0;
 					for (i=0; i<gr->nodes.count; i++){
-						graph=BFS(gr, i, wP);
+						graph=BFS_gba(gr, i, wP);
 
 						if (graph != NULL){
 							k++;
@@ -437,7 +436,7 @@ int main(int argc, char* argv[]){
 				graph_t* graph;
         if (wT != 0){
           for (i=0; i<grToTest->nodes.count; i++){
-            graph=BFS(grToTest, i, wT);
+            graph=BFS_gba(grToTest, i, wT);
 
             if (graph != NULL){
               // outputs the test graph as .dot
@@ -462,7 +461,7 @@ int main(int argc, char* argv[]){
 
         if (wP != 0){
           for (i=0; i<grPattern->nodes.count; i++){
-            graph=BFS(grPattern, i, wP);
+            graph=BFS_gba(grPattern, i, wP);
 
             if (graph != NULL){
               // outputs the pattern graph as .dot
@@ -514,7 +513,7 @@ int main(int argc, char* argv[]){
           int iso;
 					// wP != 0 so we need to use the BFS
 					for (i=0; i<grPattern->nodes.count;i++){
-						vgraphP=BFS(grPattern, i, wP);
+						vgraphP=BFS_gba(grPattern, i, wP);
 						if (vgraphP!=NULL){
               if (optionVerbose) printf("processing site %i\n", i);
 							nSgraphP++;
@@ -540,7 +539,7 @@ int main(int argc, char* argv[]){
 				if (wP == 0){
 					// wT != 0 so we need to use the BFS
 					for (i=0; i<grToTest->nodes.count;i++){
-						vgraphT=BFS(grToTest, i, wT);
+						vgraphT=BFS_gba(grToTest, i, wT);
 						if (vgraphT!=NULL){
 							nSgraphT++;
 
@@ -571,7 +570,7 @@ int main(int argc, char* argv[]){
 						int k;
 
 						for (i=0; i<grToTest->nodes.count; i++){
-							vgraphsT[i]=BFS(grToTest, i, wT);
+							vgraphsT[i]=BFS_gba(grToTest, i, wT);
 //							graph_t* g = vgraphsT[i];
 						}
 
@@ -742,7 +741,7 @@ void* processSubGraphs(void* grData){
 	for (j=debutPattern; j<finPattern; j++){
 		if (optionDebug) printf("processing pattern %d\n", j);
 		sem_wait(&mutexBSFPattern);
-		vgraphP=BFS(grPattern, j, wP);
+		vgraphP=BFS_gba(grPattern, j, wP);
 		sem_post(&mutexBSFPattern);
 		if (vgraphP != NULL){
 			nSgraphPLocal++;
@@ -1714,7 +1713,7 @@ char* BFS2(graph_t* inputGraph, vsize_t vroot, vsize_t R){
 	return matrix;
 }
 
-graph_t* BFS(graph_t* inputGraph, vsize_t vroot, vsize_t R){
+graph_t* BFS_gba(graph_t* inputGraph, vsize_t vroot, vsize_t R){
 	//all inputgraph nodes to unexplored(0):
 	node_list_t* listI = &(inputGraph->nodes);
 

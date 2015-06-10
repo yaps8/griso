@@ -52,5 +52,10 @@ add_executable(GTSI GTSI.cpp
 target_link_libraries(GTSI graph rb)
 
 # graphbinalgo
+#add_library(libgraphBinAlgo graphBinAlgo.h)
 add_executable(graphBinAlgo graphBinAlgo.h graphBinAlgo.c)
 target_link_libraries(graphBinAlgo graph pthread rb)
+
+# tests
+add_executable(tests tests.cpp graphBinAlgo.h)
+target_link_libraries(tests graphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)

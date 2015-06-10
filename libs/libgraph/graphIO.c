@@ -150,6 +150,7 @@ status_t graph_from_file(graph_t** pgraph, FILE* fp) {
   }*/
 
   node_free(node);
+  graph_fprint(stdout, *pgraph);
   return STATUS_OK;
 
   broken_file:
