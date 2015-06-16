@@ -1,6 +1,61 @@
 #ifndef GRAPHBINALGO_H
 #define GRAPHBINALGO_H
 
+#ifdef __CYGWIN__
+#include <sys/time.h>
+#endif
+
+#ifdef WIN32
+# include <winsock2.h>
+typedef HANDLE pthread_t;
+# define THREAD_FUNC DWORD WINAPI
+#else
+# include <pthread.h>
+# include <inttypes.h>
+# include <sys/time.h> /* gettimeofday */
+#define THREAD_FUNC void *
+#endif
+
+#include "rb.h"
+
+#include <semaphore.h>
+#include <stdlib.h>
+#include "graphIO.h"
+//#include "graph_import.h"
+//#include "reduction.h"
+//#include "node_ptr_list.h"
+//#include "nodeTL.h"
+//#include "input_extract.h"
+//#include <time.h>
+
+
+#if defined (WIN32) || defined (__CYGWIN__)
+# define HAVE_DOS_BASED_FILE_SYSTEM
+# define IS_DIR_SEPARATOR(ch) \
+  (((ch) == '/') || ((ch) == '\\'))
+# define SEPARATOR '\\'
+#else
+# define IS_DIR_SEPARATOR(ch) ((ch) == '/')
+# define SEPARATOR '/'
+#endif
+
+// const char * basename(const char * name) {
+//   const char *base;
+// 
+// #if defined (HAVE_DOS_BASED_FILE_SYSTEM)
+//   /* Skip over the disk name in MSDOS pathnames. */
+//   if (isalpha (name[0]) && name[1] == ':')
+//   name += 2;
+// #endif
+// 
+//   for (base = name; *name; name++) {
+//     if (IS_DIR_SEPARATOR (*name)) {
+//       base = name + 1;
+//     }
+//   }
+//   return base;
+// }
+
 // int main(int, char**);
 int pcharcmp(char* c1, char* c2, int size);
 void* processSubGraphs(void* grData);
