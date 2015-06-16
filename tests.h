@@ -4,7 +4,7 @@
 
 extern "C" {
 #include "graphIO.h"
-#include "graphBinAlgo.h"
+#include "libGraphBinAlgo.h"
 }
 
 #include "SIDT.h"

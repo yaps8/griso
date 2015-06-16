@@ -54,12 +54,13 @@ SET_TARGET_PROPERTIES(GTSI PROPERTIES ENABLE_EXPORTS ON)
 target_link_libraries(GTSI graph rb)
 
 # graphbinalgo
-#add_library(libgraphBinAlgo graphBinAlgo.h)
+add_library(libGraphBinAlgo libGraphBinAlgo.c)
+
 add_executable(graphBinAlgo graphBinAlgo.c)
-SET_TARGET_PROPERTIES(graphBinAlgo PROPERTIES ENABLE_EXPORTS ON)
-target_link_libraries(graphBinAlgo graph pthread rb)
+#SET_TARGET_PROPERTIES(graphBinAlgo PROPERTIES ENABLE_EXPORTS ON)
+target_link_libraries(graphBinAlgo libGraphBinAlgo graph pthread rb)
 
 # tests
 add_executable(tests tests.cpp)
-link_directories( . )
-target_link_libraries(tests graphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)
+#link_directories( . )
+target_link_libraries(tests libGraphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)

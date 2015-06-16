@@ -1,5 +1,5 @@
-#ifndef GRAPHBINALGO_H
-#define GRAPHBINALGO_H
+#ifndef LIBGRAPHBINALGO_H
+#define LIBGRAPHBINALGO_H
 
 #ifdef __CYGWIN__
 #include <sys/time.h>
@@ -55,6 +55,57 @@ typedef HANDLE pthread_t;
 //   }
 //   return base;
 // }
+
+char* Red;
+char* Green;
+char* Color_Off;
+char optionMCSByPattern;
+char optionMCS;
+char optionNoPerm;
+char optionCheckSymb;
+char optionCount;
+char optionRedInt;
+char optionRec;
+char optionQuiet;
+char optionVerbose;
+char optionOutSmall;
+char optionExport;
+char optionMultiThreaded;
+char optionForceRoots;
+char optionIsoOnly;
+char optionDebug;
+char optionInfo;
+char optionOnlyInduced;
+ int nThreads;
+
+FILE* FILEeP;
+FILE* FILEeT;
+FILE* FILEenP;
+FILE* FILEenT;
+FILE* FILEesP;
+FILE* FILEesT;
+
+sem_t mutexExport;
+sem_t mutexIsoTotal;
+sem_t mutexnSgraphP;
+sem_t mutexStructRead;
+sem_t mutexBSFPattern;
+char* isThreadBusy;
+
+int maxFound;
+int maxPatternFound;
+int isoTotal;
+int wP;
+int wT;
+int nSgraphP;
+
+struct structProcessGraph{
+   graph_t* grPattern;
+   vsize_t debutPattern;
+   vsize_t finPattern;
+   vsize_t tailleTest;
+   graph_t** graphsToTest;
+};
 
 // int main(int, char**);
 int pcharcmp(char* c1, char* c2, int size);
