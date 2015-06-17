@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
  
  int i;
  for (i=0; i<5; i++){
-  cout << "Running test " + std::to_string(i) + "\n";
+  std::cout << "Running test " + std::to_string(i) + "\n";
   std::string pathPattern = "tests_graphs/test" + std::to_string(i) + "/pattern.edg";
   std::string pathTest = "tests_graphs/test" + std::to_string(i) + "/test.edg";
   fpPattern = fopen(pathPattern.c_str(), "r");
@@ -80,10 +80,49 @@ int main(int argc, char* argv[]){
 	    printf("%sisoTotal: %d%s\n", Green, isoTotal, Color_Off);
     }
     
+    // SIDT
+    optionFuncs = 0;
+    char optionLearn=0;
+    char optionLearnList=0;
+    char learnOk=0;
+    char scanOk=0;
+    char optionTest=0;
+    char optionShowStats=0;
+    char optionOutputDt=0;
+    char* pathDT;
+    int siteCountLimit=0;
+    int siteSize=24;
+    char withLabels=1;
+    bool optionInfo = false;
+    
+    int* scanFuncs;
+    int valence = 2;
+    
+    ProgInfo* scanInfo=NULL;
+    decisionTree* dt=newDecisionTree(siteSize, valence);
+    std::string st = "Pattern";
+    char* msg = (char*) st.c_str();
+    int n_pattern = learnGraph(grPattern, dt, msg, siteCountLimit, withLabels);
+    printf("%d sites learned from %s\n", n_pattern, msg);
+    int* countByProg= (int*) calloc(dt->nProgs, sizeof(int));
+    
+    if (optionFuncs) scanFuncs= (int*) calloc(scanInfo->n, sizeof(int));
+    int n=findGraph(grTest, dt, countByProg, scanInfo, scanFuncs, withLabels);
+    printf("%d sites of %s found from %s\n", n, pathTest.c_str(), dt->progs[0]->message);
+    printf("Pattern graph %s has %d sites ; test graph %s has %d sites found matching.\n", pathPattern.c_str(), n_pattern, pathTest.c_str(), n);
+    if (optionFuncs){
+	    printf("\nFunctions found: \n");
+	    int k;
+	    for (k=0; k<scanInfo->n; k++){
+		    if (scanFuncs[k]!=0){
+			    printf("%d %s\n", scanFuncs[k], scanInfo->functions[k]->name);
+		    }
+	    }
+    }
+    if (optionFuncs) free(scanFuncs);
+    
     // GTSI
     
-    // SIDT
-    
-    cout << "\n";
+    std::cout << "\n";
  }
 }

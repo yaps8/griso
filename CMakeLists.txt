@@ -41,9 +41,10 @@ add_library(BFSGraph libsSIDT/BFSGraph/BFSGraph.c)
 add_library(funcInfo libsSIDT/funcInfo/funcInfo.c)
 add_library(libprog libsSIDT/Prog/prog.c)
 
+add_library(libSIDT libSIDT.cpp)
 add_executable(SIDT SIDT.cpp)
-SET_TARGET_PROPERTIES(SIDT PROPERTIES ENABLE_EXPORTS ON)
-target_link_libraries(SIDT graph rb decisionTree BFSGraph libprog funcInfo)
+#SET_TARGET_PROPERTIES(SIDT PROPERTIES ENABLE_EXPORTS ON)
+target_link_libraries(SIDT libSIDT graph rb decisionTree BFSGraph libprog funcInfo)
 
 # GTSI
 add_executable(GTSI GTSI.cpp
