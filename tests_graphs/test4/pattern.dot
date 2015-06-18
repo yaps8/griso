@@ -4,5 +4,4 @@ Digraph G {
 "C" [label = "INST"]
 "A" -> "B"
 "A" -> "C"
-"B" -> "C"
 }

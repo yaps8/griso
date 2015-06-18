@@ -1,5 +1,5 @@
-#ifndef GTSI_H
-#define GTSI_H
+#ifndef LIBGTSI_H
+#define LIBGTSI_H
 
 #include <stdio.h>
 extern "C" {
@@ -9,5 +9,6 @@ extern "C" {
 #include "utils-gtsi.h"
 #include <unordered_set>
 
+extern char optionFuncs;
 char* labCharToString(vsize_t label);
 #endif

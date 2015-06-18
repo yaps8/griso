@@ -149,7 +149,7 @@ int main(int argc, char* argv[]){
 
 	if (optionLearn){
 		graph_t* gr;
-		graph_from_file(&gr, fpPattern);
+		graph_from_file(&gr, fpPattern, optionLabels);
 		fclose(fpPattern);
 
 		char* msg= (char*) malloc((strlen(pathPattern)+1)*sizeof(char));
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]){
 		graph_free(gr);
 
 		if (optionTest){
-			graph_from_file(&gr, fpTest);
+			graph_from_file(&gr, fpTest, optionLabels);
 			fclose(fpTest);
 
 			int* countByProg= (int*) calloc(dt->nProgs, sizeof(int));
@@ -199,7 +199,7 @@ int main(int argc, char* argv[]){
 				continue;
 			}
 
-			char a=graph_from_file(&gr, fp);
+			char a=graph_from_file(&gr, fp, optionLabels);
 			fclose(fp);
 			if (a!=0){
 				if (optionInfo) fprintf(stderr, "%d, This file is not a valid graph: %s\n", i, line);
@@ -234,7 +234,7 @@ int main(int argc, char* argv[]){
 					continue;
 				}
 
-				char a=graph_from_file(&gr, fp);
+				char a=graph_from_file(&gr, fp, optionLabels);
 				fclose(fp);
 				if (a!=0){
 					if (optionInfo) fprintf(stderr, "%d, This file is not a valid graph: %s\n", i, line);

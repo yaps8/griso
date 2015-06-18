@@ -347,7 +347,7 @@ int isoUllman(graph_t* grPattern, graph_t* grToTest){
 	vsize_t nToTest = grToTest->nodes.count;
 	vsize_t nPattern = grPattern->nodes.count;
 
-	printf("nP: %d, nT: %d\n", nPattern, nToTest);
+// 	printf("nP: %d, nT: %d\n", nPattern, nToTest);
 
 	if ((!optionMCS && nToTest < nPattern) || nToTest == 0 || nPattern == 0){
 		// Pattern is larger that the graph to test
@@ -467,8 +467,8 @@ int backtrack(graph_t* grPattern, graph_t* grToTest, char* M0, vsize_t j, vsize_
 // 	fflush(stdout);
 
 	if (j>=limit){ //there is isomorphism : output it and move on (return)
-		printf("Found\n");
-		debugPrintF(F, Fmax);
+// 		printf("Found\n");
+// 		debugPrintF(F, Fmax);
 		return 1;
 	}
 	else{

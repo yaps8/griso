@@ -9,6 +9,7 @@ extern "C" {
 }
 
 #include "libSIDT.h"
+#include "libGTSI.h"
 char optionFuncs;
 
 // #include "GTSI.h"

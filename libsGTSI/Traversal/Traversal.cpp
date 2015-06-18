@@ -328,6 +328,10 @@ vsize_t ParcoursNode::addGraph(graph_t* gr, vsize_t W, vsize_t maxLearn){
   for (n=0; n<gr->nodes.size; n++){
     if (maxLearn == 0 || added < maxLearn){
       p = parcoursLargeur(gr, n, W);
+      
+      if (p->size > 1){
+	std::cout << p->toString() + "\n";
+      }
 
       if (p->complete){
           if (this->addParcours(p, 0)){

@@ -76,7 +76,8 @@ char optionIsoOnly;
 char optionDebug;
 char optionInfo;
 char optionOnlyInduced;
- int nThreads;
+char optionLabels;
+int nThreads;
 
 FILE* FILEeP;
 FILE* FILEeT;

@@ -2,7 +2,9 @@ Digraph G {
 "A" [label = "JCC" , options="root"]
 "B" [label = "INST"]
 "C" [label = "INST"]
+"D" [label = "INST"]
 "A" -> "B"
 "A" -> "C"
-"B" -> "C"
+"B" -> "D"
+"C" -> "A"
 }

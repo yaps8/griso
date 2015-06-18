@@ -59,7 +59,7 @@ size_t graph_to_file(graph_t* graph, FILE* fp) {
   return ret;
 }
 
-status_t graph_from_file(graph_t** pgraph, FILE* fp) {
+status_t graph_from_file(graph_t** pgraph, FILE* fp, char optionLabels) {
   node_t* node, *new_node;
   vsize_t count;
   graph_t * graph = NULL;
@@ -87,7 +87,8 @@ status_t graph_from_file(graph_t** pgraph, FILE* fp) {
       /* it's a node */
       node_from_file(node, fp);
       new_node = node_list_append(&graph->nodes, node->node_id);
-      new_node->symb = node->symb;
+      if (optionLabels) new_node->symb = node->symb;
+      else new_node->symb = INST_UNDEF;
       break;
 
     case 'e': {

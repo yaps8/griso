@@ -43,25 +43,23 @@ add_library(libprog libsSIDT/Prog/prog.c)
 
 add_library(libSIDT libSIDT.cpp)
 add_executable(SIDT SIDT.cpp)
-#SET_TARGET_PROPERTIES(SIDT PROPERTIES ENABLE_EXPORTS ON)
 target_link_libraries(SIDT libSIDT graph rb decisionTree BFSGraph libprog funcInfo)
 
 # GTSI
-add_executable(GTSI GTSI.cpp
+add_library(libGTSI libGTSI.cpp
       libsGTSI/utils-gtsi.cpp
       libsGTSI/Traversal/Traversal.cpp
 )
-SET_TARGET_PROPERTIES(GTSI PROPERTIES ENABLE_EXPORTS ON)
-target_link_libraries(GTSI graph rb)
+
+add_executable(GTSI GTSI.cpp)
+target_link_libraries(GTSI libGTSI graph rb)
 
 # graphbinalgo
 add_library(libGraphBinAlgo libGraphBinAlgo.c)
 
 add_executable(graphBinAlgo graphBinAlgo.c)
-#SET_TARGET_PROPERTIES(graphBinAlgo PROPERTIES ENABLE_EXPORTS ON)
 target_link_libraries(graphBinAlgo libGraphBinAlgo graph pthread rb)
 
 # tests
 add_executable(tests tests.cpp)
-#link_directories( . )
-target_link_libraries(tests libGraphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)
+target_link_libraries(tests libGTSI libSIDT libGraphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)
