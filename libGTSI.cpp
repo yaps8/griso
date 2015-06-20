@@ -2,7 +2,7 @@
 #define LIBGTSI_CPP
 
 #include "libGTSI.h"
-#include <Traversal.hpp>
+// #include <Traversal.hpp>
 
 char* labCharToString(vsize_t label){
 	switch (label){
