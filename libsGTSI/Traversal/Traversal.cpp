@@ -439,6 +439,7 @@ vsize_t ParcoursNode::parcourir(graph_t* gr, vsize_t W){
    for (it = ret.begin(); it!=ret.end(); it++){
 	   vsize_t id = *it;
       if (get<1>(leaves.insert(id))){
+	    printf("p %d\n", n);
 	    count++;
 	  }
    }
