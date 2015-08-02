@@ -55,11 +55,8 @@ int main(int argc, char* argv[]){
  FILE* fpPattern;
  FILE* fpTest;
  
- int i;
- for (i=0; i<5; i++){
-  printf("%s", Blue);
-  std::cout << "Running test " + std::to_string(i) + "\n";
-  printf("%s", Color_Off);
+ int i=0;
+ while (i<std::numeric_limits<int>::max()){
   std::string pathPattern = "tests_graphs/test" + std::to_string(i) + "/pattern.edg";
   std::string pathTest = "tests_graphs/test" + std::to_string(i) + "/test.edg";
   fpPattern = fopen(pathPattern.c_str(), "r");
@@ -67,18 +64,39 @@ int main(int argc, char* argv[]){
 
   
     if (fpPattern == NULL || fpTest == NULL){
-      printf("Can't open pattern or test graph\n");
-      return 1;
+//       printf("Can't open pattern or test graph\n");
+      break;
     }
+    printf("%s", Blue);
+    std::cout << "Running test " + std::to_string(i) + "\n";
+    printf("%s", Color_Off);
     
     graph_from_file(&grPattern, fpPattern, optionLabels);
     graph_from_file(&grTest, fpTest, optionLabels);
     fclose(fpPattern);
     fclose(fpTest);
     
+    graph_fprint(stdout, grPattern);
+    graph_fprint(stdout, grTest);
+    
     // Ullmann
+//     test_Ullmann(grPattern, grTest);
+    // SIDT
+//     test_SIDT(grPattern, grTest);
+    
+    // GTSI
+    test_GTSI(grPattern, grTest);
+
+    
+    std::cout << "\n";
+    i++;
+ }
+}
+
+void test_Ullmann(graph_t* grPattern, graph_t* grTest){
     std::cout << "Ullmann:\n";
     int isoTotal=isoUllman(grPattern, grTest);
+    char* color;
     if (isoTotal>=1){
       color = Red;
     }
@@ -86,9 +104,11 @@ int main(int argc, char* argv[]){
       color = Green;
     }
     printf("%sisoTotal: %d%s\n", color, isoTotal, Color_Off);
-    
-    
-    // SIDT
+}
+
+
+void test_SIDT(graph_t* grPattern, graph_t* grTest){
+    char* color;
     std::cout << "SIDT:\n";
     optionFuncs = 0;
     char optionLearn=0;
@@ -127,7 +147,11 @@ int main(int argc, char* argv[]){
     printf("%s%d sites from test graph found matching.%s\n", color, n, Color_Off);
     
     
-    // GTSI
+}
+
+void test_GTSI(graph_t* grPattern, graph_t* grTest){
+    char* color;
+    int siteSize=grPattern->nodes.count;
     std::cout << "GTSI:\n";
     ParcoursNode* tree = new ParcoursNode();
     tree->addGraph(grPattern, siteSize, 0);
@@ -143,6 +167,4 @@ int main(int argc, char* argv[]){
     printf("%s%d traversals possible in test graph.%s\n", color, count, Color_Off);
 
     
-    std::cout << "\n";
- }
 }
