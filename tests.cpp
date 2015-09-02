@@ -48,7 +48,6 @@ int main(int argc, char* argv[]){
   
   optionLabels=0;
   
-// test0
  graph_t* grPattern;
  graph_t* grTest;
   
@@ -64,7 +63,7 @@ int main(int argc, char* argv[]){
 
   
     if (fpPattern == NULL || fpTest == NULL){
-//       printf("Can't open pattern or test graph\n");
+      fprintf(stderr, "Can't open pattern or test graph\n");
       break;
     }
     printf("%s", Blue);
@@ -79,11 +78,10 @@ int main(int argc, char* argv[]){
     graph_fprint(stdout, grPattern);
     graph_fprint(stdout, grTest);
     
-    // Ullmann
-//     test_Ullmann(grPattern, grTest);
+//     Ullmann
+    test_Ullmann(grPattern, grTest);
     // SIDT
-//     test_SIDT(grPattern, grTest);
-    
+    test_SIDT(grPattern, grTest);
     // GTSI
     test_GTSI(grPattern, grTest);
 

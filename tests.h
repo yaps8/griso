@@ -13,8 +13,6 @@ extern "C" {
 #include "libGTSI.h"
 char optionFuncs;
 
-// #include "GTSI.h"
-
 void test_Ullmann(graph_t* grPattern, graph_t* grTest);
 void test_SIDT(graph_t* grPattern, graph_t* grTest);
 void test_GTSI(graph_t* grPattern, graph_t* grTest);
