@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
 
   
     if (fpPattern == NULL || fpTest == NULL){
-      fprintf(stderr, "Can't open pattern or test graph\n");
+//       fprintf(stderr, "Can't open pattern or test graph\n");
       break;
     }
     printf("%s", Blue);

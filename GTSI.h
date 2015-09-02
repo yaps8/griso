@@ -3,8 +3,4 @@
 
 #include "libGTSI.h"
 
-char optionFuncs;
-char optionLabels;
-void printUsage();
-
 #endif

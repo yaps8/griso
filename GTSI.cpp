@@ -1,14 +1,11 @@
-#ifndef GTSI_CPP
-#define GTSI_CPP
-
 #include "GTSI.h"
-// #include <Traversal.hpp>
 
-// char optionFuncs=0;
+char optionFuncs;
+char optionLabels;
 
 void printUsage(){
-	printf("Use SIDT (Site Identification Decision Tree) to learn and scan sites in .edg files.\n");
-	printf("Usage : ./SIDT [options] [command]\n");
+	printf("Use GTSI (Graph Traversal for Site Identification) to learn and scan sites in .edg files.\n");
+	printf("Usage : ./GTSI [options] [command]\n");
 	printf("Commands are :\n");
 	printf("        -h or --help : print this help\n");
 	printf("        -l or --learn fileToLearn [fileToScan] : learns a .edg file [and scans a .edg file]\n");
@@ -25,12 +22,14 @@ void printUsage(){
 	printf("        -o or --output-dt [path] : outputs the decision tree as a .dot file for display\n");
 	printf("        -lc or --limit-site-count limit : specifies how many sites should be learnt in total (for debug purposes, default: unlimited)\n");
 	printf("Examples :\n");
-	printf("        ./SIDT -ss 16 -l firefox.edg firefox.edg : learns and scans a single file with sites of size 16\n");
-	printf("        ./SIDT  -lc 30 -o DTfirefox.dot -l firefox.edg : learns only 30 sites from a single file and outputs the decision tree as a .dot file\n");
-	printf("        ./SIDT -s -ll malwares.lst sample.lst : learns a list of malwares and scans a list of files, then prints stats about the decision tree\n");
+	printf("        ./GTSI -ss 16 -l firefox.edg firefox.edg : learns and scans a single file with sites of size 16\n");
+	printf("        ./GTSI  -lc 30 -o DTfirefox.dot -l firefox.edg : learns only 30 sites from a single file and outputs the decision tree as a .dot file\n");
+	printf("        ./GTSI -s -ll malwares.lst sample.lst : learns a list of malwares and scans a list of files, then prints stats about the decision tree\n");
 }
 
 int main(int argc, char* argv[]){
+	optionFuncs = 0;
+  
 	if (argc <= 2){
 		printUsage();
 		return 0;
@@ -138,8 +137,6 @@ int main(int argc, char* argv[]){
 
 			else {
 				optionFuncs=1;
-//				printf("%p %p %p\n", scanInfo, scanInfo->functions, *scanInfo->functions[0]->name);
-//				return 0;
 			}
 		}
 	}
@@ -289,49 +286,3 @@ int main(int argc, char* argv[]){
 		}
 	}
 }
-
-char* labCharToString(vsize_t label){
-	switch (label){
-	case 0:
-		return (char*) "INIT";
-		break;
-	case 1:
-		return (char*) "RET";
-		break;
-	case 2:
-		return (char*) "CALL";
-		break;
-	case 3:
-		return (char*) "JMP";
-		break;
-	case 4:
-		return (char*) "END";
-		break;
-	case 5:
-		return (char*) "SCALL";
-		break;
-	case 6:
-		return (char*) "UREACH";
-		break;
-	case 7:
-		return (char*) "UNDEF";
-		break;
-	case 8:
-		return (char*) "JCC";
-		break;
-	case 9:
-		//return "SEQ";
-		return (char*) "INST";
-		break;
-	case 10:
-		return (char*) "PATH";
-		break;
-	case 11:
-		return (char*) "END";
-		break;
-	default:
-		return (char*) "(UNKNOWN)";
-	}
-}
-
-#endif
