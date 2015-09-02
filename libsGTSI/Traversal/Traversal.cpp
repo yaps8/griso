@@ -140,7 +140,7 @@ Parcours* parcoursLargeur(graph_t* graph, vsize_t vroot, vsize_t W){
 
     
     unordered_set<node_t*>::iterator it = explored.find(ss);
-	if ((it != explored.end() or i < W + 1) and sc != pere and not p_is_epsilon){
+    if ((it != explored.end() or i < W + 1) and sc != pere and not p_is_epsilon){
       m = new MotParcours();
       m->type = TYPE_M2;
       m->alpha_is_R = true;
@@ -279,11 +279,8 @@ unordered_set< Parcours* > parcoursFromGraph(graph_t* gr, vsize_t W){
   unordered_set<Parcours*> parcours;
   Parcours* p;
   vsize_t n;
-//   ParcoursNode* pn = new ParcoursNode();
-//   pn->id = 0;
   
   for (n=0; n<gr->nodes.size; n++){
-//    if (node_list_item(&(gr->nodes), n)->node_id == 0x1006e5b){
    p = parcoursLargeur(gr, n, W);
 
    if (p->complete){
@@ -297,13 +294,10 @@ unordered_set< Parcours* > parcoursFromGraph(graph_t* gr, vsize_t W){
           break;
        }
      }
-//     pn->addParcours(p, 0);
     if (new_p) parcours.insert(p);
    }
-//    }
   }
   
-//   this->saveParcoursNodeToDot();
   return parcours;
 }
 
@@ -341,7 +335,6 @@ vsize_t ParcoursNode::addGraph(graph_t* gr, vsize_t W, vsize_t maxLearn){
       break;
     }
   }
-//this->saveParcoursNodeToDot();
   return added;
 }
 
@@ -401,11 +394,7 @@ bool ParcoursNode::addParcours(Parcours* p, int index){
   if (index >= p->size){
 	bool b = this->feuille;
 	this->feuille = true;
-//   if (b){
-    //printf("existing\n");
-//   }
     return not b;
-// 	return false;
   }
   MotParcours* m = p->mots[index];
   list<ParcoursNode*>::iterator it;
@@ -419,7 +408,6 @@ bool ParcoursNode::addParcours(Parcours* p, int index){
   ParcoursNode* pn = new ParcoursNode();
   pn->mot = m;
   pn->id = (uint64_t) pn;
-  //printf("id: %s\n", h2s(pn->id).c_str());
 
   this->fils.push_back(pn);
   return pn->addParcours(p, index+1);
@@ -428,7 +416,6 @@ bool ParcoursNode::addParcours(Parcours* p, int index){
 vsize_t ParcoursNode::parcourir(graph_t* gr, vsize_t W){
   vsize_t count=0;
   vsize_t n;
-//   unordered_set<vsize_t> leaves;
   std::set<vsize_t> leaves;
   for (n=0; n<gr->nodes.size; n++){
    list<vsize_t> ret = this->parcourirDepuisSommet(gr, n, W);
@@ -451,7 +438,6 @@ list<vsize_t> ParcoursNode::parcourirDepuisSommet(graph_t* gr, vsize_t v, vsize_
   
   node_t** numeros = (node_t**) calloc(W, sizeof(node_t*));
   vsize_t max_numeros = 0;
-//   if (r->node_id != 0x10012f1) return false;
   return this->parcourirDepuisSommetRec(true, gr, r, W, numeros, max_numeros, numerotes);
 }
 
@@ -470,11 +456,8 @@ list<vsize_t> ParcoursNode::parcourirDepuisSommetRec(bool racine, graph_t* gr, n
     list<ParcoursNode*>::iterator it;
     for (it=this->fils.begin(); it!=this->fils.end(); it++){
       ParcoursNode* f = (*it);
-      //printf("pid: %s\n", h2s(f->id).c_str());
-      //printf("mot: %s\n", f->mot->toString().c_str());
       RetourEtape ret = etape(f->mot, r, gr, numeros, max_numeros, numerotes);
       bool possible = get<0>(ret);
-      //printf("p: %s\n", b2s(possible).c_str());
       node_t* node = get<1>(ret);
       numeros = get<2>(ret);
       vsize_t max_numeros_r = get<3>(ret);
@@ -490,11 +473,6 @@ list<vsize_t> ParcoursNode::parcourirDepuisSommetRec(bool racine, graph_t* gr, n
 }
 
 ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t* gr, node_t** numeros, vsize_t max_numeros,  unordered_set<node_t*> numerotes){
-//   printf("R\n");
-//   printf("cc: %d\n", s->children_nb);
-//   cout << m->toString();
-//   cout << "\n";
-//   printf("max_numeros: %d, n_numerotes: %d\n", max_numeros, numerotes.size());
   if (m->type == TYPE_M1){
     if (s->symb == m->symbol){
       
@@ -503,11 +481,9 @@ ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t
       numeros[max_numeros] = s;
       max_numeros++;
       numerotes.insert(s);
-//       printf("cc1: %d\n", s->children_nb);
       return std::make_tuple(true, s, numeros, max_numeros, numerotes);
     }
     else {
-      //printf("cc2: %d\n", s->children_nb);
       return std::make_tuple(false, s, numeros, max_numeros, numerotes);
     }
   }
@@ -515,25 +491,18 @@ ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t
     if (m->alpha_is_R){
       if (max_numeros >= m->i){
         s = numeros[m->i-1];
-//         printf("ss: %d\n", s->children_nb);
         return std::make_tuple(true, s, numeros, max_numeros, numerotes);
       }
       else {
-        //printf("cc2b: %d\n", s->children_nb);
         return std::make_tuple(false, s, numeros, max_numeros, numerotes);
       }
     }
     else {
-//       printf("m: %s\n", i2s(m->k).c_str());
-//       printf("c: %s\n", i2s(s->children_nb).c_str());
       if (m->k < s->children_nb){
-//         printf("%d children.\n", s->children_nb);
         node_t* f = s->children[m->k];
         unordered_set<node_t*>::iterator it = numerotes.find(f);
         if (it==numerotes.end()){
           // f n'est pas numéroté
-//           printf("arg: %d %d\n", max_numeros, m->i);
-//           printf("arg2: %d %d\n", f->symb, m->symbol);
           if (f->symb == m->symbol and max_numeros < m->i){
 	    
             assert(max_numeros == m->i - 1);
@@ -541,35 +510,28 @@ ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t
             numeros[max_numeros] = f;
             max_numeros++;
             numerotes.insert(f);
-//             printf("cc3: %d\n", s->children_nb);
             return std::make_tuple(true, f, numeros, max_numeros, numerotes);
           }
           else {
-            //printf("cc4: %d\n", s->children_nb);
             return std::make_tuple(false, s, numeros, max_numeros, numerotes);
           }
         }
         else if (not m->has_symbol) {
-//           printf("cc5: %d\n", s->children_nb);
           return std::make_tuple(true, f, numeros, max_numeros, numerotes);
         }
         else {
-          //printf("cc6: %d\n", s->children_nb);
           return std::make_tuple(false, s, numeros, max_numeros, numerotes);
         }
       }
       else{
-        //printf("cc7: %d\n", s->children_nb);
         return std::make_tuple(false, s, numeros, max_numeros, numerotes);
       }
     }
   }
   else {
     printf("ERR: UNKNOWN TYPE.\n");
-//     printf("cc8: %d\n", s->children_nb);
     return std::make_tuple(false, s, numeros, max_numeros, numerotes);
   }
-//   printf("OOOOPS");
 }
 
 
