@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(sigraph)
+project(griso)
 CMAKE_POLICY(SET CMP0015 NEW)
 set(CMAKE_CXX_FLAGS " -std=c++11")
 

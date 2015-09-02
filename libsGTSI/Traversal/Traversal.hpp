@@ -1,5 +1,5 @@
-#ifndef TRAVERSAL_H
-#define TRAVERSAL_H
+#ifndef TRAVERSAL_HPP
+#define TRAVERSAL_HPP
 
 
 #include <tuple>
@@ -12,7 +12,7 @@
 #include <forward_list>
 #include <queue>
 #include "utils-gtsi.h"
-#include "GTSI.h"
+// #include "GTSI.h"
 #include <fstream>
 #include <assert.h>
 using namespace std;
@@ -20,8 +20,11 @@ using namespace std;
 extern "C" {
 #include "symbol.h"
 #include "graph.h"
-#include "GTSI.h"
 }
+
+// #include "libGTSI.h"
+
+extern char* labCharToString(vsize_t label);
 
 enum TypeMotParcours {
  TYPE_M1, 

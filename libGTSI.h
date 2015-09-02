@@ -9,6 +9,7 @@ extern "C" {
 #include "utils-gtsi.h"
 #include <unordered_set>
 
-extern char optionFuncs;
+// char optionFuncs;
+// char optionLabels;
 char* labCharToString(vsize_t label);
 #endif
