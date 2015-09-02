@@ -14,6 +14,7 @@
 #include "utils-gtsi.h"
 #include "GTSI.h"
 #include <fstream>
+#include <assert.h>
 using namespace std;
 
 extern "C" {

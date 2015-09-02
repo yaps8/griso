@@ -92,9 +92,7 @@ void Parcours::addMot(MotParcours* m){
   this->mots = (MotParcours**) realloc(this->mots, (this->size+1)*sizeof(MotParcours*));
   this->mots[this->size] = m;
   this->size++;
-  if (m->type != TYPE_M1 and m->type != TYPE_M2){
-      cout << "!!!!\n";
-  }
+  assert(m->type == TYPE_M1 or m->type == TYPE_M2);
 }
 
 
@@ -111,7 +109,9 @@ Parcours* parcoursLargeur(graph_t* graph, vsize_t vroot, vsize_t W){
   bool p_is_epsilon = true;
   vsize_t s = 0;
   nI = node_list_item(listI, vroot);
-  if (nI==NULL) printf("NULLPB\n");
+  
+  assert(nI != NULL);
+  
   nI->list_id=(vsize_t) 1;
 
   std::queue<TupleQueue> queue3;
@@ -175,9 +175,7 @@ Parcours* parcoursLargeur(graph_t* graph, vsize_t vroot, vsize_t W){
         i++;
         sc = ss;
         
-        if (ss->children_nb>2){
-          printf("ERR: >2 children\n");
-        }
+        assert(ss->children_nb <= 2);
         for (k2=0; k2<ss->children_nb; k2++){
           f = ss->children[k2];
           queue3.push(std::make_tuple(ss, k2, f));
@@ -403,9 +401,9 @@ bool ParcoursNode::addParcours(Parcours* p, int index){
   if (index >= p->size){
 	bool b = this->feuille;
 	this->feuille = true;
-  if (b){
+//   if (b){
     //printf("existing\n");
-  }
+//   }
     return not b;
 // 	return false;
   }
@@ -466,15 +464,9 @@ list<vsize_t> ParcoursNode::parcourirDepuisSommetRec(bool racine, graph_t* gr, n
 	  l.push_back(this->id);
   }
  
-  if (not this->feuille and this->fils.empty() and not racine){
-// 	printf()
-// 	l.push_back(this->id);
-	printf("ERR: not feuille and no sons.\n");
-    printf("ret, id: %s\n", h2s(this->id).c_str());
-//     return l;
-  }
-//   else {
-//     printf("%d fils\n", this->fils.size());
+    
+    assert(this->feuille or racine or not this->fils.empty());
+    
     list<ParcoursNode*>::iterator it;
     for (it=this->fils.begin(); it!=this->fils.end(); it++){
       ParcoursNode* f = (*it);
@@ -505,9 +497,9 @@ ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t
 //   printf("max_numeros: %d, n_numerotes: %d\n", max_numeros, numerotes.size());
   if (m->type == TYPE_M1){
     if (s->symb == m->symbol){
-      if (max_numeros!=0){
-        printf("ERRRR\n");
-      }
+      
+      assert(max_numeros==0);
+      
       numeros[max_numeros] = s;
       max_numeros++;
       numerotes.insert(s);
@@ -543,9 +535,9 @@ ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t
 //           printf("arg: %d %d\n", max_numeros, m->i);
 //           printf("arg2: %d %d\n", f->symb, m->symbol);
           if (f->symb == m->symbol and max_numeros < m->i){
-            if (max_numeros != m->i - 1){
-              printf("ERR: diff\n");
-            }
+	    
+            assert(max_numeros == m->i - 1);
+	    
             numeros[max_numeros] = f;
             max_numeros++;
             numerotes.insert(f);
