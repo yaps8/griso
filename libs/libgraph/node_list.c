@@ -87,7 +87,7 @@ node_t* node_list_append(node_list_t * list, uint64_t node_id) {
   new_node->list_id = list->count;
   list->count++;
 
-  // le noeud à ajouter est déjà dans le RB tree, mais cette erreur n'a pas d'incidence sur le résultat et le fonctionnement de sigtool après
+  // le noeud à ajouter est déjà dans le RB tree, mais cette erreur n'a pas d'incidence sur le résultat et le fonctionnement
   // on affiche l'erreur sans quitter
   MY_ASSERT_MSG_CONTINUE(rb_find(list->rb, &new_node) == NULL, "Already in node_list");
 

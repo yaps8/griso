@@ -751,8 +751,8 @@ int forwardChecking(graph_t* grPattern, graph_t* grToTest, char* Mp, vsize_t j, 
 	  ekv=E(nTk, nTv);
 	  ewl=E(nPw, nPl);
 	  evk=E(nTv, nTk);
-	  cp1 = ekv || !elw;
-	  cp2 = evk || !ewl;
+	  cp1 = ekv || !elw; // instead of !ekv || elw because of the inversion
+	  cp2 = evk || !ewl; // instead of !evk || ewl because of the inversion
 	  Cp=!(cp1 && cp2);
 // 	  printf("cp1: (k, l): (%d, %d), (v, w): (%d, %d), P:%d, T:%d\n", k, l, v, w, ekv, elw);
 // 	  printf("cp2: (k, l): (%d, %d), (v, w): (%d, %d), P:%d, T:%d\n", k, l, v, w, evk, ewl);
