@@ -218,11 +218,13 @@ void graph_fprint(FILE* fp, graph_t* graph) {
   fprintf(fp, "Digraph G {\n");
 
   node_it = node_list_it_new(&graph->nodes);
+  size_t node_number = 0;
   while ((node = node_list_it_get_next(node_it)) != NULL) {
 	if (node->children_nb!=0 || node->fathers_nb!=0){
-		node_to_dot(node,(node_t*)&graph->root->node_id,fp);
+		node_to_dot(node,(node_t*)&graph->root->node_id, node_number,fp);
 		node_edges_to_dot(node, fp);
 	}
+	node_number++;
   }
   node_list_it_free(node_it);
 

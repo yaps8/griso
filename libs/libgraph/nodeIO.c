@@ -1,10 +1,10 @@
 #include "file_access.h"
 #include "nodeIO.h"
 
-size_t node_to_dot(const node_t* node, const node_t* root,FILE* fp) {
+size_t node_to_dot(const node_t* node, const node_t* root, size_t node_number,FILE* fp) {
   size_t ret;
 
-  ret = fprintf(fp, "\"%"PRIx64"\" [label = \"%"PRIx64" : ", node->node_id, node->node_id);
+  ret = fprintf(fp, "\"%"PRIx64"\" [label = \"%"PRIx64"(%d) : ", node->node_id, node->node_id, node_number);
   switch (node->symb) {
   case INST_SEQ:
     ret += fprintf(fp, "INST");
@@ -53,7 +53,7 @@ size_t node_edges_to_dot(const node_t* node, FILE* fp) {
   ret = 0;
   for (j = 0; j < node->children_nb; ++j) {
     const node_t* child = node_child_const(node, j);
-    ret += fprintf(fp, "\"%"PRIx64"\" -> \"%"PRIx64"\"", node->node_id, child->node_id);
+    ret += fprintf(fp, "\"%"PRIx64"\" -> \"%"PRIx64"\" [label = \"%d\"]", node->node_id, child->node_id, j);
     ret += fprintf(fp, "\n");
   }
   return ret;

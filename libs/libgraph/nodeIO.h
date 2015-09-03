@@ -24,7 +24,7 @@ size_t pointer_id_to_file(const void * ptr, FILE* fp);
  @param fp Destination file.
  @return Number of written bytes.
  */
-size_t node_to_dot(const node_t* node, const node_t* root,FILE* fp);
+size_t node_to_dot(const node_t* node, const node_t* root, size_t, FILE* fp);
 
 /*!
  @brief Print all edges going out of a node in format .dot.

@@ -38,7 +38,7 @@ string MotParcours::toString(){
   return s;
 }
 
-bool MotParcours::equals(MotParcours* m){
+bool MotParcours::equals(MotParcours* m, bool checkLabels){
   if (this->type == m->type){
     if (this->type == TYPE_M1){
       return this->symbol == m->symbol;
@@ -46,10 +46,10 @@ bool MotParcours::equals(MotParcours* m){
     else {
       if (this->alpha_is_R == m->alpha_is_R){
         if (this->alpha_is_R){
-          return (this->i == m->i) && (this->has_symbol == m->has_symbol) && ((not this->has_symbol) or (this->symbol == m->symbol));
+          return (this->i == m->i) && (this->has_symbol == m->has_symbol) && ((not this->has_symbol) or (not checkLabels) or this->symbol == m->symbol);
         }
         else {
-          return (this->k == m->k) && (this->i == m->i) && (this->has_symbol == m->has_symbol) && ((not this->has_symbol) or (this->symbol == m->symbol));
+          return (this->k == m->k) && (this->i == m->i) && (this->has_symbol == m->has_symbol) && ((not this->has_symbol) or (not checkLabels) or this->symbol == m->symbol);
         }
       }
       else {
@@ -65,12 +65,12 @@ Parcours::Parcours(){
   this->size = 0;
 }
 
-bool Parcours::equals(Parcours* p){
+bool Parcours::equals(Parcours* p, bool checkLabels){
   if (this->size != p->size) return false;
   
   vsize_t n;
   for (n=0; n<this->size; n++){
-    if (not this->mots[n]->equals(p->mots[n])) return false;
+    if (not this->mots[n]->equals(p->mots[n], checkLabels)) return false;
   }
 
   return true;
@@ -205,7 +205,7 @@ Parcours* parcoursLargeur(graph_t* graph, vsize_t vroot, vsize_t W){
     return p;
 }
 
-bool Parcours::parcourirDepuisSommet(graph_t* graph, vsize_t vroot, vsize_t W){
+bool Parcours::parcourirDepuisSommet(graph_t* graph, vsize_t vroot, vsize_t W, bool checkLabels){
   node_t* sc;
   node_list_t* listI = &(graph->nodes);
   node_t* nI;
@@ -265,17 +265,17 @@ bool Parcours::parcourirDepuisSommet(graph_t* graph, vsize_t vroot, vsize_t W){
   return true;
 }
 
-bool Parcours::parcourir(graph_t* gr, vsize_t W){
+bool Parcours::parcourir(graph_t* gr, vsize_t W, bool checkLabels){
   vsize_t n;
   for (n=0; n<gr->nodes.size; n++){
-   if (this->parcourirDepuisSommet(gr, n, W)){
+   if (this->parcourirDepuisSommet(gr, n, W, checkLabels)){
       return true;
    }
   }
   return false;
 }
 
-unordered_set< Parcours* > parcoursFromGraph(graph_t* gr, vsize_t W){
+unordered_set< Parcours* > parcoursFromGraph(graph_t* gr, vsize_t W, bool checkLabels){
   unordered_set<Parcours*> parcours;
   Parcours* p;
   vsize_t n;
@@ -289,7 +289,7 @@ unordered_set< Parcours* > parcoursFromGraph(graph_t* gr, vsize_t W){
      bool new_p = true;
      for (it=parcours.begin(); it!=parcours.end(); it++){
        Parcours* p2 = *it;
-       if (p->equals(p2)){
+       if (p->equals(p2, checkLabels)){
           new_p = false;
           break;
        }
@@ -312,7 +312,7 @@ ParcoursNode::ParcoursNode(std::list< ParcoursNode* > fils, MotParcours* mot, ui
   this->id = id;
 }
 
-vsize_t ParcoursNode::addGraph(graph_t* gr, vsize_t W, vsize_t maxLearn){
+vsize_t ParcoursNode::addGraph(graph_t* gr, vsize_t W, vsize_t maxLearn, bool checkLabels){
   Parcours* p;
   vsize_t n;
   vsize_t added=0;
@@ -321,12 +321,12 @@ vsize_t ParcoursNode::addGraph(graph_t* gr, vsize_t W, vsize_t maxLearn){
     if (maxLearn == 0 || added < maxLearn){
       p = parcoursLargeur(gr, n, W);
       
-      if (p->size > 1){
-	std::cout << p->toString() + "\n";
-      }
+//       if (p->size > 1){
+// 	std::cout << p->toString() + "\n";
+//       }
 
       if (p->complete){
-          if (this->addParcours(p, 0)){
+          if (this->addParcours(p, 0, checkLabels)){
             added++;
           }
         }
@@ -390,7 +390,7 @@ void ParcoursNode::saveParcoursNodeToDot(){
   ofs.close();
 }
 
-bool ParcoursNode::addParcours(Parcours* p, int index){
+bool ParcoursNode::addParcours(Parcours* p, int index, bool checkLabels){
   if (index >= p->size){
 	bool b = this->feuille;
 	this->feuille = true;
@@ -400,8 +400,8 @@ bool ParcoursNode::addParcours(Parcours* p, int index){
   list<ParcoursNode*>::iterator it;
   for (it=this->fils.begin(); it!=this->fils.end(); it++){
     ParcoursNode* f = (*it);
-    if (f->mot->equals(m)){
-      return f->addParcours(p, index+1);
+    if (f->mot->equals(m, checkLabels)){
+      return f->addParcours(p, index+1, checkLabels);
     }
   }
   
@@ -410,15 +410,15 @@ bool ParcoursNode::addParcours(Parcours* p, int index){
   pn->id = (uint64_t) pn;
 
   this->fils.push_back(pn);
-  return pn->addParcours(p, index+1);
+  return pn->addParcours(p, index+1, checkLabels);
 }
 
-vsize_t ParcoursNode::parcourir(graph_t* gr, vsize_t W){
+vsize_t ParcoursNode::parcourir(graph_t* gr, vsize_t W, bool checkLabels){
   vsize_t count=0;
   vsize_t n;
   std::set<vsize_t> leaves;
   for (n=0; n<gr->nodes.size; n++){
-   list<vsize_t> ret = this->parcourirDepuisSommet(gr, n, W);
+   list<vsize_t> ret = this->parcourirDepuisSommet(gr, n, W, checkLabels);
    list<vsize_t>::iterator it = ret.begin();
    
    for (it = ret.begin(); it!=ret.end(); it++){
@@ -431,31 +431,30 @@ vsize_t ParcoursNode::parcourir(graph_t* gr, vsize_t W){
   return count;
 }
 
-list<vsize_t> ParcoursNode::parcourirDepuisSommet(graph_t* gr, vsize_t v, vsize_t W){
+list<vsize_t> ParcoursNode::parcourirDepuisSommet(graph_t* gr, vsize_t v, vsize_t W, bool checkLabels){
   unordered_set<node_t*> numerotes;
   node_t* r = node_list_item(&gr->nodes, v);
   
   node_t** numeros = (node_t**) calloc(W, sizeof(node_t*));
   vsize_t max_numeros = 0;
-  return this->parcourirDepuisSommetRec(true, gr, r, W, numeros, max_numeros, numerotes);
+  return this->parcourirDepuisSommetRec(true, gr, r, W, numeros, max_numeros, numerotes, checkLabels);
 }
 
 
-list<vsize_t> ParcoursNode::parcourirDepuisSommetRec(bool racine, graph_t* gr, node_t* r, vsize_t W, node_t** numeros, vsize_t max_numeros,  unordered_set<node_t*> numerotes)
+list<vsize_t> ParcoursNode::parcourirDepuisSommetRec(bool racine, graph_t* gr, node_t* r, vsize_t W, node_t** numeros, vsize_t max_numeros,  unordered_set<node_t*> numerotes, bool checkLabels)
 {
   list<vsize_t> l;
   
   if (this->feuille){
 	  l.push_back(this->id);
   }
- 
     
     assert(this->feuille or racine or not this->fils.empty());
     
     list<ParcoursNode*>::iterator it;
     for (it=this->fils.begin(); it!=this->fils.end(); it++){
       ParcoursNode* f = (*it);
-      RetourEtape ret = etape(f->mot, r, gr, numeros, max_numeros, numerotes);
+      RetourEtape ret = etape(f->mot, r, gr, numeros, max_numeros, numerotes, checkLabels);
       bool possible = get<0>(ret);
       node_t* node = get<1>(ret);
       numeros = get<2>(ret);
@@ -463,17 +462,16 @@ list<vsize_t> ParcoursNode::parcourirDepuisSommetRec(bool racine, graph_t* gr, n
       unordered_set<node_t*> numerotes_r = get<4>(ret);
       
       if (possible){
-        list<vsize_t> l2 = f->parcourirDepuisSommetRec(false, gr, node, W, numeros, max_numeros_r, numerotes_r);
+        list<vsize_t> l2 = f->parcourirDepuisSommetRec(false, gr, node, W, numeros, max_numeros_r, numerotes_r, checkLabels);
         l.splice(l.begin(), l2);
       }
     }
-//   }
   return l;;
 }
 
-ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t* gr, node_t** numeros, vsize_t max_numeros,  unordered_set<node_t*> numerotes){
+ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t* gr, node_t** numeros, vsize_t max_numeros,  unordered_set<node_t*> numerotes, bool checkLabels){
   if (m->type == TYPE_M1){
-    if (s->symb == m->symbol){
+    if ((not checkLabels) or s->symb == m->symbol){
       
       assert(max_numeros==0);
       
@@ -502,7 +500,7 @@ ParcoursNode::RetourEtape ParcoursNode::etape(MotParcours* m, node_t* s, graph_t
         unordered_set<node_t*>::iterator it = numerotes.find(f);
         if (it==numerotes.end()){
           // f n'est pas numéroté
-          if (f->symb == m->symbol and max_numeros < m->i){
+          if ((not checkLabels or f->symb == m->symbol) and max_numeros < m->i){
 	    
             assert(max_numeros == m->i - 1);
 	    

@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
 	char* pathDT;
 	int siteCountLimit=0;
 	int siteSize=24;
-	char withLabels=1;
+	bool checkLabels=true;
   bool useTree = true;
   bool limitSiteCount = false;
   bool optionInfo = false;
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]){
 			optionShowStats=1;
 		}
 		else if (strcmp(argv[a], "-ncl") == 0 || strcmp(argv[a], "-ncs") == 0 || strcmp(argv[a], "--no-check-labels") == 0){
-			withLabels=0;
+			checkLabels=false;
 		}
 		else if (strcmp(argv[a], "-o") == 0 || strcmp(argv[a], "--output-dt") == 0){
 			optionOutputDt=1;
@@ -160,14 +160,14 @@ int main(int argc, char* argv[]){
 		fclose(fpPattern);
     
     if (not useTree){
-      parcours = parcoursFromGraph(gr, siteSize);
+      parcours = parcoursFromGraph(gr, siteSize, checkLabels);
       char* msg=(char*)malloc((strlen(pathPattern)+1)*sizeof(char));
       sprintf(msg, "%s", pathPattern);
       printf("%d parcours reconstruits depuis  %s\n", (int) parcours.size(), msg);
       n_pattern = gr->nodes.size;
     }
     else {
-      tree->addGraph(gr, siteSize, 0);
+      tree->addGraph(gr, siteSize, 0, checkLabels);
       char* msg=(char*)malloc((strlen(pathPattern)+1)*sizeof(char));
       sprintf(msg, "%s", pathPattern);
       printf("%d parcours reconstruits depuis  %s\n", tree->countLeaves(), msg);
@@ -186,7 +186,7 @@ int main(int argc, char* argv[]){
         std::unordered_set<Parcours*>::iterator it;
         for (it=parcours.begin(); it!=parcours.end(); it++){
           p=*it;
-          if (p->parcourir(gr, siteSize)){
+          if (p->parcourir(gr, siteSize, checkLabels)){
             count++;
           }
         }
@@ -194,7 +194,7 @@ int main(int argc, char* argv[]){
         printf("Pattern graph %s a %d sommets ; test graph %s a %d sommets.\n", pathPattern, n_pattern, pathTest, gr->nodes.size);
       }
       else {
-        vsize_t count=tree->parcourir(gr, siteSize);
+        vsize_t count=tree->parcourir(gr, siteSize, checkLabels);
         printf("%d parcours possibles dans %s\n", count, pathTest);
         printf("Pattern graph %s a %d sommets ; test graph %s a %d sommets.\n", pathPattern, n_pattern, pathTest, gr->nodes.size);
       }
@@ -233,11 +233,11 @@ int main(int argc, char* argv[]){
             learnt = 0;
           }
           else{
-            learnt = tree->addGraph(gr, siteSize, siteCountLimit - learntTotal);
+            learnt = tree->addGraph(gr, siteSize, siteCountLimit - learntTotal, checkLabels);
           }
         }
         else {
-          learnt = tree->addGraph(gr, siteSize, 0);
+          learnt = tree->addGraph(gr, siteSize, 0, checkLabels);
         }
         learntTotal += learnt;
         char* msg=(char*)malloc((strlen(line)+1)*sizeof(char));
@@ -277,7 +277,7 @@ int main(int argc, char* argv[]){
 					continue;
 				}
 
-        n=tree->parcourir(gr, siteSize);
+        n=tree->parcourir(gr, siteSize, checkLabels);
 				if (optionInfo) printf("%d, %s: %d sites found\n", i, line, n);
 
 				graph_free(gr);

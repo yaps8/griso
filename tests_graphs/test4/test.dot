@@ -3,8 +3,8 @@ Digraph G {
 "B" [label = "INST"]
 "C" [label = "JCC"]
 "D" [label = "INST"]
-"A" -> "B"
-"A" -> "C"
-"B" -> "D"
-"C" -> "A"
+"A" -> "B" [label = "1"]
+"A" -> "C" [label = "2"]
+"B" -> "D" [label = "1"]
+"C" -> "A" [label = "1"]
 }

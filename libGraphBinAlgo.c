@@ -1,12 +1,12 @@
 /*
- ============================================================================
- Name        : graphBinAlgo.c
- Author      : Aurelien Thierry
- Version     :
- Copyright   : Your copyright notice
- Description : Tests of algorithms for graph isomorphisms on binary dumps
- ============================================================================
- */
+============================================================================
+Name        : graphBinAlgo.c
+Author      : Aurelien Thierry
+Version     :
+Copyright   : Your copyright notice
+Description : Tests of algorithms for graph isomorphisms on binary dumps
+============================================================================
+*/
 
 #include "libGraphBinAlgo.h"
 
@@ -321,7 +321,7 @@ vsize_t min(vsize_t a, vsize_t b){
 }
 
 int isoUllman(graph_t* grPattern, graph_t* grToTest){
-  	if (optionVerbose){
+	if (optionVerbose){
 		printf("Options are : p %d, t %d, nThreads %d, ", wP, wT, nThreads);
 
 		if (optionInfo) printf("Info ");
@@ -342,6 +342,7 @@ int isoUllman(graph_t* grPattern, graph_t* grToTest){
 		if (optionVerbose) printf("Verbose ");
 		printf("\n");
 	}
+// 	if (optionCheckSymb) printf("CheckSymbols ");
   
 	//Initializing M0:
 	vsize_t nToTest = grToTest->nodes.count;
@@ -383,7 +384,7 @@ int isoUllman(graph_t* grPattern, graph_t* grToTest){
 
 			// nPj->symb == nTi->symb : is it clever with reductions ? results might be different (slightly without reductions)
 			// but it increases (a lot) performances
-			if ((!optionCheckSymb || nPj->symb == nTi->symb) && (0==0 || optionMCS || (nTiIn >= nPjIn && nTiOut >= nPjOut))){
+			if ((!optionCheckSymb || nPj->symb == nTi->symb) && (optionMCS || (nTiIn >= nPjIn && nTiOut >= nPjOut))){
 				M0[i*nPattern+j]=1;
 
 				if (optionForceRoots){
@@ -466,6 +467,7 @@ int backtrack(graph_t* grPattern, graph_t* grToTest, char* M0, vsize_t j, vsize_
 // 	if (optionDebug) printf("processing j=%d\n", j);
 // 	fflush(stdout);
 
+// 	debugPrintF(F, Fmax);
 	if (j>=limit){ //there is isomorphism : output it and move on (return)
 // 		printf("Found\n");
 // 		debugPrintF(F, Fmax);
@@ -700,174 +702,180 @@ void forbidPerm(graph_t* grPattern, graph_t* grToTest, char* Mp, vsize_t j, vsiz
 }
 
 int forwardChecking(graph_t* grPattern, graph_t* grToTest, char* Mp, vsize_t j, vsize_t nPattern, vsize_t nToTest, vsize_t* F, vsize_t Fmax, char* assignedPattern, char* assignedToTest, node_list_t* listP, node_list_t* listT, char optionOnlyInduced){
-// 	printf("begin forward\n");
-// 	debugPrintM(Mp, nPattern, nToTest);
-// 	debugPrintF(F, Fmax);
-	
-	vsize_t k;
-	vsize_t l;
-	for (k=0; k<nToTest; k++){
-		for (l=0; l<nPattern; l++){ //for (l=j+1; l<nPattern; l++){
-			if(assignedToTest[k]!=0 && assignedPattern[l]!=0 && Mp[k*nPattern + l]){
-				node_t* nPl = node_list_item(listP, l);
-				node_t* nTk = node_list_item(listT, k);
-				vsize_t fm, v, w;
+  // 	printf("begin forward\n");
+//   debugPrintM(Mp, nPattern, nToTest);
+//   debugPrintF(F, Fmax);
 
-				fm=Fmax-2;
-				v=F[fm];
-				w=F[fm+1];
-				node_t* nPw = node_list_item(listP, w);
-				node_t* nTv = node_list_item(listT, v);
+  vsize_t k;
+  vsize_t l;
+  for (k=0; k<nToTest; k++){
+    for (l=0; l<nPattern; l++){ //for (l=j+1; l<nPattern; l++){
+      if(assignedToTest[k]!=0 && assignedPattern[l]!=0 && Mp[k*nPattern + l]){
+	node_t* nPl = node_list_item(listP, l);
+	node_t* nTk = node_list_item(listT, k);
+	vsize_t fm, v, w;
 
-				// booleans : 1 (true), 0 (false)
-				// K(bool) : 1 (known), 0 (unknown)
-				char ekv=0;
-				char Kekv=0;
-				char evk=0;
-				char Kevk=0;
-				char elw=0;
-//				char Kelw=0;
-				char ewl=0;
-//				char Kewl=0;
-//				char flk=0;
-//				char Kflk=0;
+	fm=Fmax-2;
+	v=F[fm];
+	w=F[fm+1];
+	node_t* nPw = node_list_item(listP, w);
+	node_t* nTv = node_list_item(listT, v);
+
+	// booleans : 1 (true), 0 (false)
+	// K(bool) : 1 (known), 0 (unknown)
+	char ekv=0;
+	char Kekv=0;
+	char evk=0;
+	char Kevk=0;
+	char elw=0;
+	//				char Kelw=0;
+	char ewl=0;
+	//				char Kewl=0;
+	//				char flk=0;
+	//				char Kflk=0;
 
 
 
-        if (!optionOnlyInduced){
-//        Checks if : ((k, v) and (l -- k)) => (l, w),  and  ((v, k) and (l -- k)) => (w, l)
-//        "Bool" cp1 = !ekv || elw;
-//        "Bool" cp2 = !evk || ewl;
-          char cp1=0;
-          char cp2=0;
-          char Cp; // Cp=cp1 || cp2
-          elw=E(nPl, nPw);
-          ekv=E(nTk, nTv);
-          ewl=E(nPw, nPl);
-          evk=E(nTv, nTk);
-          cp1 = !ekv || elw;
-          cp2 = !evk || ewl;
-          Cp=!(cp1 && cp2);
-          if (Cp){
-            Mp[k*nPattern + l]=0;
-          }
-        }
-        else{
-//        Checks if : ((k, v) and (l -- k)) iff (l, w),  and  ((v, k) and (l -- k)) iff (w, l)
-//        "Bool" c1 = (ekv && elw) || (!ekv && !elw);
-//        "Bool" c2 = (evk && ewl) || (!evk && !ewl);
+	if (!optionOnlyInduced){
+	  //  Checks if : ((k, v) and (l -- k)) => (l, w),  and  ((v, k) and (l -- k)) => (w, l)
+	  //  "Bool" cp1 = !ekv || elw;
+	  //  "Bool" cp2 = !evk || ewl;
+	  //  Attention, les notations sont inversées par rapport au chapitre "algo"
+	  //  Ici :
+	  //  P : w, l
+	  //  T : v, k
+	  char cp1=0;
+	  char cp2=0;
+	  char Cp; // Cp=cp1 || cp2
+	  elw=E(nPl, nPw);
+	  ekv=E(nTk, nTv);
+	  ewl=E(nPw, nPl);
+	  evk=E(nTv, nTk);
+	  cp1 = ekv || !elw;
+	  cp2 = evk || !ewl;
+	  Cp=!(cp1 && cp2);
+// 	  printf("cp1: (k, l): (%d, %d), (v, w): (%d, %d), P:%d, T:%d\n", k, l, v, w, ekv, elw);
+// 	  printf("cp2: (k, l): (%d, %d), (v, w): (%d, %d), P:%d, T:%d\n", k, l, v, w, evk, ewl);
+	  if (Cp){
+	    Mp[k*nPattern + l]=0;
+	  }
+	}
+	else{
+	//        Checks if : ((k, v) and (l -- k)) iff (l, w),  and  ((v, k) and (l -- k)) iff (w, l)
+	//        "Bool" c1 = (ekv && elw) || (!ekv && !elw);
+	//        "Bool" c2 = (evk && ewl) || (!evk && !ewl);
 
-          char c1=0;
-          char c2=0;
-          
-          char C; // C=!(c1 && c2)=!c1 || !c2
-          // C=1 iff c1=0 or c2=0
-          
-  //				Determining c1, beginning by the second term
-          // edge (l, w) in P ?
-          elw=E(nPl, nPw);
-  //				Kelw=1;
+	char c1=0;
+	char c2=0;
 
-          if (!elw){
-            // edge (k, v) in T ?
-            ekv=E(nTk, nTv);
-            Kekv=1;
+	char C; // C=!(c1 && c2)=!c1 || !c2
+	// C=1 iff c1=0 or c2=0
 
-            if (!ekv) {
-              c1=1;
-            }
-          }
+	//				Determining c1, beginning by the second term
+	// edge (l, w) in P ?
+	elw=E(nPl, nPw);
+	//				Kelw=1;
 
-          if (!c1){ // c1 still unknown
-            //elw is (always) known
-            if (elw){
-              if (!Kekv){
-                // edge (k, v) in T ?
-                ekv=E(nTk, nTv);
-                Kekv=1;
-              }
+	if (!elw){
+	  // edge (k, v) in T ?
+	  ekv=E(nTk, nTv);
+	  Kekv=1;
 
-              if (ekv){
-                c1=1;
-              }
-            }
-          }
-
-  //				Determining c2, beginning by the second term, only if c1 is true
-          if (c1){
-            // edge (w, l) in P ?
-            ewl=E(nPw, nPl);
-  //					Kewl=1;
-
-            if (!ewl){
-              // edge (v, k) in T ?
-              evk=E(nTv, nTk);
-              Kevk=1;
-
-              if (!evk) {
-                c2=1;
-              }
-            }
-
-            if (!c2){ // c2 still unknown
-              //ewl is (always) known
-              if (ewl){
-                if (!Kevk){
-                  // edge (v, k) in T ?
-                  evk=E(nTv, nTk);
-                  Kevk=1;
-                }
-
-                if (evk){
-                  c2=1;
-                }
-              }
-            }
-          }
-
-          // C=1 iff c1=0 or c2=0
-          C=!(c1&&c2);
-
-          if (C){
-            Mp[k*nPattern + l]=0;
-          }
-        }
-			}
-		}
+	  if (!ekv) {
+	    c1=1;
+	  }
 	}
 
-//	debugPrintM(Mp, nPattern, nToTest);
+	if (!c1){ // c1 still unknown
+	  //elw is (always) known
+	  if (elw){
+	    if (!Kekv){
+	      // edge (k, v) in T ?
+	      ekv=E(nTk, nTv);
+	      Kekv=1;
+	    }
 
-	// exists l >= j + 1 / foreach k, Mk,l = 0 ?
-	if (!optionMCS){
-		for (l=j+1; l<nPattern; l++){
-			char eM=0; // exists l / M[k][l]=1 ?
+	    if (ekv){
+	      c1=1;
+	    }
+	  }
+	}
 
-			for (k=0; k<nToTest; k++){
-				if (Mp[k*nPattern + l]==1) {
-					eM=1;
-					break;
-				}
-			}
+	//				Determining c2, beginning by the second term, only if c1 is true
+	if (c1){
+	  // edge (w, l) in P ?
+	  ewl=E(nPw, nPl);
+	  //					Kewl=1;
 
-			if (!eM){
+	  if (!ewl){
+	    // edge (v, k) in T ?
+	    evk=E(nTv, nTk);
+	    Kevk=1;
+
+	    if (!evk) {
+	      c2=1;
+	    }
+	  }
+
+	  if (!c2){ // c2 still unknown
+	    //ewl is (always) known
+	    if (ewl){
+	      if (!Kevk){
+		// edge (v, k) in T ?
+		evk=E(nTv, nTk);
+		Kevk=1;
+	      }
+
+	      if (evk){
+		c2=1;
+	      }
+	    }
+	  }
+	}
+
+	// C=1 iff c1=0 or c2=0
+	C=!(c1&&c2);
+
+	if (C){
+	  Mp[k*nPattern + l]=0;
+	}
+	}
+      }
+    }
+  }
+
+  //	debugPrintM(Mp, nPattern, nToTest);
+
+  // exists l >= j + 1 / foreach k, Mk,l = 0 ?
+  if (!optionMCS){
+    for (l=j+1; l<nPattern; l++){
+      char eM=0; // exists l / M[k][l]=1 ?
+
+      for (k=0; k<nToTest; k++){
+	if (Mp[k*nPattern + l]==1) {
+	  eM=1;
+	  break;
+	}
+      }
+
+      if (!eM){
 	//			printf("0\n");
-				return 0;
-			}
-		}
+	return 0;
+      }
+    }
+  }
+  else {
+    for (l=0; l<nPattern; l++){
+      for (k=0; k<nToTest; k++){
+	if (assignedPattern[l]!=0 && assignedToTest[k]!=0 && Mp[k*nPattern+l]==1){
+	  return 1;
 	}
-	else {
-		for (l=0; l<nPattern; l++){
-			for (k=0; k<nToTest; k++){
-				if (assignedPattern[l]!=0 && assignedToTest[k]!=0 && Mp[k*nPattern+l]==1){
-					return 1;
-				}
-			}
-		}
-		return 0;
-	}
-//	printf("1\n");
-	return 1;
+      }
+    }
+    return 0;
+  }
+  //	printf("1\n");
+  return 1;
 }
 
 //char Flk(vsize_t l, vsize_t k, vsize_t* F, vsize_t Fmax){

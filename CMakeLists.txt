@@ -63,3 +63,7 @@ target_link_libraries(graphBinAlgo libGraphBinAlgo graph pthread rb)
 # tests
 add_executable(tests tests.cpp)
 target_link_libraries(tests libGTSI libSIDT libGraphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)
+
+# edg2dot
+add_executable(edg2dot edg2dot.cpp)
+target_link_libraries(edg2dot graph rb)
