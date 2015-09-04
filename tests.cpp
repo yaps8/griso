@@ -1,6 +1,38 @@
 #include "tests.h"
 
+void printDescription()
+{
+  std::cout << "Tests are done as follows.\n";
+  std::cout << "There are test folders. Each test folder:\n";
+  std::cout << "  Tests with every method (Ullmann, SIDT, GTSI):\n";
+  std::cout << "    pattern_*.dot are learnt.\n";
+  std::cout << "    test.dot is tested against learnt graphs.\n";
+  std::cout << "\n";
+  std::cout << "Ullmann:\n";
+  std::cout << "  No learning.\n";
+  std::cout << "  Counting the subgraph isomorphisms between each pattern graph and the test graph.\n";
+  std::cout << "  The result is the addition.\n";
+  std::cout << "\n";
+  std::cout << "SIDT:\n";
+  std::cout << "  Pattern graphs are cut into sites (site size: minimum size between pattern graphs).\n";
+  std::cout << "  Learning: via decision tree.\n";
+  std::cout << "  Testing: via decision tree (with sites)\n";
+  std::cout << "  The result is the number of matching sites.\n";
+  std::cout << "\n";
+  std::cout << "GTSI:\n";
+  std::cout << "  Pattern graphs are cut into sites (site size: minimum size between pattern graphs).\n";
+  std::cout << "  Learning: via traversal tree.\n";
+  std::cout << "  Testing: via traversal tree (with sites)\n";
+  std::cout << "  The result is the number of possible traversals.\n";
+}
+
+
 int main(int argc, char* argv[]){
+  if (argc >= 2){
+    printDescription();
+    return 1;
+  }
+  
   char* color;
   Red="\e[1;31m";
   Green="\e[1;32m";
