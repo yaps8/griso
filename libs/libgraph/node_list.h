@@ -1,8 +1,11 @@
-#ifndef JD_NODE_LIST_H
-#define JD_NODE_LIST_H
+#ifndef NODE_LIST_H
+#define NODE_LIST_H
 
 #include "node.h"
 
+// struct dict;
+
+  
 /*!
  @file node_list.h
  @brief Wrapper preventing from using dv_t for node list.
@@ -14,7 +17,6 @@
  @see node_ptr_list.h
  */
 struct _dv_t;
-struct rb_table;
 struct node_list_iterator_t;
 
 /*!
@@ -40,12 +42,11 @@ typedef struct node_list_t {
    @brief Number of node allocated in the node array.
    */
   vsize_t count;
-
+  
   /*!
-   @brief red and black tree (hashtable) for creation purpose only. Allows to
-   find efficiently a node by its address.
-   */
-  struct rb_table *rb;
+  @brief Dictionary (or map) used when loading graph from edg file
+  */
+  struct dict *nodes_dict;
 } node_list_t;
 
 /*!

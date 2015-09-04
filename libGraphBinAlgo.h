@@ -16,8 +16,6 @@ typedef HANDLE pthread_t;
 #define THREAD_FUNC void *
 #endif
 
-#include "rb.h"
-
 #include <semaphore.h>
 #include <stdlib.h>
 #include "graphIO.h"

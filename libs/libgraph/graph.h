@@ -1,5 +1,5 @@
-#ifndef JD_GRAPH_H
-#define JD_GRAPH_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
 /*!
  @file graph.h

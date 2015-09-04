@@ -16,37 +16,37 @@ size_t graph_to_file(graph_t* graph, FILE* fp) {
   /* Write Magic value */
   ret += fwrite_le_swap(GRAPHBINMAGIC, 1, GRAPHBINMAGIC_LEN, fp);
 
+  size_t i;
+  
   /* write the number of nodes */
   /* only taking non orphans nodes */
-  node_it = node_list_it_new(&graph->nodes);
-  while ((node = node_list_it_get_next(node_it)) != NULL) {
-	  if (node->children_nb != 0 || node ->fathers_nb != 0){
-		  nNonOrphanNode++;
-	  }
+  for (i=0; i<graph->nodes.count; i++){
+    node_t* node = &(graph->nodes.storage[i]);
+    if (node->children_nb!=0 || node->fathers_nb!=0){
+      nNonOrphanNode++;
+    }
   }
 
   count = fwrite_le_swap(&nNonOrphanNode, sizeof(vsize_t), 1, fp);
   ret += count * sizeof(vsize_t);
 
   /* for easier parsing all node are dumped first */
-  node_list_it_rewind(node_it);
-  while ((node = node_list_it_get_next(node_it)) != NULL) {
-	  if (node->children_nb != 0 || node ->fathers_nb != 0){
-		  fputc('n', fp);
-		  ret++;
-		  nNonOrphanNode++;
+  for (i=0; i<graph->nodes.count; i++){
+    node_t* node = &(graph->nodes.storage[i]);
+    if (node->children_nb != 0 || node ->fathers_nb != 0){
+	    fputc('n', fp);
+	    ret++;
+	    nNonOrphanNode++;
 
-		  ret += node_to_file(node, fp);
-	}
+	    ret += node_to_file(node, fp);
+    }
   }
 
   /* then edges */
-  node_list_it_rewind(node_it);
-  while ((node = node_list_it_get_next(node_it)) != NULL) {
-	  ret += node_edges_to_file(node, fp);
+  for (i=0; i<graph->nodes.count; i++){
+    node_t* node = &(graph->nodes.storage[i]);
+    ret += node_edges_to_file(node, fp);
   }
-
-  node_list_it_free(node_it);
 
   if (nNonOrphanNode != 0 && graph->root != NULL){
 	  fputc('r', fp);
@@ -217,16 +217,16 @@ void graph_fprint(FILE* fp, graph_t* graph) {
 
   fprintf(fp, "Digraph G {\n");
 
-  node_it = node_list_it_new(&graph->nodes);
-  size_t node_number = 0;
-  while ((node = node_list_it_get_next(node_it)) != NULL) {
-	if (node->children_nb!=0 || node->fathers_nb!=0){
-		node_to_dot(node,(node_t*)&graph->root->node_id, node_number,fp);
-		node_edges_to_dot(node, fp);
-	}
-	node_number++;
+  size_t i;
+  
+  for (i=0; i<graph->nodes.count; i++){
+      node_t node = graph->nodes.storage[i];
+      if (node.children_nb!=0 || node.fathers_nb!=0){
+	      node_to_dot(&node,(node_t*)&graph->root->node_id, i, fp);
+	      node_edges_to_dot(&node, fp);
+      }
   }
-  node_list_it_free(node_it);
+
 
   fprintf(fp, "}\n");
 }

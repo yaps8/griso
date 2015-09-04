@@ -1,5 +1,5 @@
-#ifndef JD_GRAPHIO_H
-#define JD_GRAPHIO_H
+#ifndef GRAPHIO_H
+#define GRAPHIO_H
 
 /*!
  @file graphIO.h

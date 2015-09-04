@@ -1,5 +1,5 @@
-#ifndef JD_NODE_H
-#define JD_NODE_H
+#ifndef NODE_H
+#define NODE_H
 
 /*!
  @file node.h

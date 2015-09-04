@@ -1,5 +1,5 @@
-#ifndef JD_SYMBOL_H
-#define JD_SYMBOL_H
+#ifndef SYMBOL_H
+#define SYMBOL_H
 
 #include "ga_types.h"
 /*!

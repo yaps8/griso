@@ -10,27 +10,31 @@ include_directories(
 	libsSIDT/decisionTree/
 	libsSIDT/Prog/
 	libsSIDT/funcInfo/
-	libs/rb_tree/
 	libs/include/
 	libs/libgraph/
 	libsGTSI/
 	libsGTSI/Traversal/
+	libs/dict/
 )
 
 #shared libs
 add_library(graph
       libs/libgraph/graph.h
-      libs/libgraph/graph.c 
+      libs/libgraph/graph.c
       libs/libgraph/graphIO.h
-	  libs/libgraph/graphIO.c
+      libs/libgraph/graphIO.c
       libs/libgraph/node.h
-	  libs/libgraph/node.c
+      libs/libgraph/node.c
       libs/libgraph/node_list.h
-	  libs/libgraph/node_list.c
+      libs/libgraph/node_list.c
       libs/libgraph/nodeIO.h
-	  libs/libgraph/nodeIO.c
+      libs/libgraph/nodeIO.c
 )
-add_library(rb libs/rb_tree/rb.c)
+
+add_library(dict 
+      libs/dict/dict.c
+      libs/dict/dict.h
+)
 
 #SIDT
 add_library(decisionTree libsSIDT/decisionTree/decisionTree.c
@@ -43,7 +47,7 @@ add_library(libprog libsSIDT/Prog/prog.c)
 
 add_library(libSIDT libSIDT.cpp)
 add_executable(SIDT SIDT.cpp)
-target_link_libraries(SIDT libSIDT graph rb decisionTree BFSGraph libprog funcInfo)
+target_link_libraries(SIDT libSIDT graph dict decisionTree BFSGraph libprog funcInfo)
 
 # GTSI
 add_library(libGTSI libGTSI.cpp
@@ -52,18 +56,18 @@ add_library(libGTSI libGTSI.cpp
 )
 
 add_executable(GTSI GTSI.cpp)
-target_link_libraries(GTSI libGTSI graph rb)
+target_link_libraries(GTSI libGTSI graph dict)
 
 # graphbinalgo
 add_library(libGraphBinAlgo libGraphBinAlgo.c)
 
 add_executable(graphBinAlgo graphBinAlgo.c)
-target_link_libraries(graphBinAlgo libGraphBinAlgo graph pthread rb)
+target_link_libraries(graphBinAlgo libGraphBinAlgo graph pthread dict)
 
 # tests
 add_executable(tests tests.cpp)
-target_link_libraries(tests libGTSI libSIDT libGraphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread rb)
+target_link_libraries(tests libGTSI libSIDT libGraphBinAlgo graph decisionTree BFSGraph libprog funcInfo pthread dict)
 
 # edg2dot
 add_executable(edg2dot edg2dot.cpp)
-target_link_libraries(edg2dot graph rb)
+target_link_libraries(edg2dot graph dict)
