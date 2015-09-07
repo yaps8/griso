@@ -12,6 +12,7 @@ It is aimed at processing control flow graphs obtained by static (or hybrid) ana
 - graphBinAlgo: Ullmann's algorithm implementation
 - GTSI: complete site detection algorithm (based on graph traversal)
 - SIDT: fast site detection algorithm (with a decision tree)
+- tests: unit tests
 
 # Usage
 ./(binary) --help
