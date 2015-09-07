@@ -16,12 +16,12 @@ It is aimed at processing control flow graphs obtained by static (or hybrid) ana
 # Usage
 ./(binary) --help
 
-# SIDT
+## SIDT
 Binary: SIDT
 
 Usage:
-./SIDT --learn file.edg
-./SIDT --learn-list learn.lst scan.lst
+- ./SIDT --learn file.edg
+- ./SIDT --learn-list learn.lst scan.lst
 
 Documentation:
-See doc/SIDT.pdf (in French)
+- See doc/SIDT.pdf (in French)
