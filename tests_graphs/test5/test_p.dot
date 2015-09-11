@@ -1,8 +1,0 @@
-Digraph G {
-"A" [label = "JCC" , options="root"]
-"B" [label = "INST"]
-"C" [label = "INST"]
-"A" -> "B"
-"A" -> "C"
-"B" -> "C"
-}

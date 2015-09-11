@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <fstream>
+#include <cstdlib>
 
 extern "C" {
 #include "graphIO.h"
@@ -15,6 +16,6 @@ extern "C" {
 char optionFuncs;
 
 void printDescription();
-void test_Ullmann(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc);
-void test_SIDT(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc);
-void test_GTSI(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc);
+void test_Ullmann(graph_t** grPattern, int nPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc);
+void test_SIDT(graph_t** grPattern, int nPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc);
+void test_GTSI(graph_t** grPattern, int nPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc);

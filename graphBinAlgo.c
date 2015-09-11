@@ -67,10 +67,10 @@ int main(int argc, char* argv[]){
 			printf("-bp or --mcs-by-pattern : search MCS from each node of the pattern graph\n");
 			printf("-p number : number of nodes for BFS taken on pattern graph (not specified or 0 : whole graph)\n");
 			printf("-t number : number of nodes for BFS taken on test graph (not specified or 0 : whole graph)\n");
-			printf("-sm or --search-max : search maximum subgraph and exports its number of nodes");
+			printf("-sm or --search-max : search maximum subgraph and exports its number of nodes\n");
 			printf("-np or --no-permutation : forbids permutations in subgraph search (DEPRECATED)\n");
 			printf("-cs or --check-symbols : checks if 2 nodes have same symbol before associating them\n");
-      printf("-oi or --only-induced : only induced subgraphs are considered for isomorphism\n");
+			printf("-oi or --only-induced : only induced subgraphs are considered for isomorphism\n");
 			printf("-c or --count : count the number of isomorphisms (doesn't stop on first found)\n");
 			printf("-r or --reduction-interval : if one argument, reduces the input graph with the interval method\n");
 			printf("-R or --recursive : if -redint, reduces it recursively until the graph is irreducible\n");

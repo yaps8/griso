@@ -7,6 +7,7 @@ void printDescription()
   std::cout << "  Tests with every method (Ullmann, SIDT, GTSI):\n";
   std::cout << "    pattern_*.dot are learnt.\n";
   std::cout << "    test.dot is tested against learnt graphs.\n";
+  std::cout << "    Once with symbols (labels) checking, once without.\n";
   std::cout << "\n";
   std::cout << "Ullmann:\n";
   std::cout << "  No learning.\n";
@@ -24,6 +25,13 @@ void printDescription()
   std::cout << "  Learning: via traversal tree.\n";
   std::cout << "  Testing: via traversal tree (with sites)\n";
   std::cout << "  The result is the number of possible traversals.\n";
+  std::cout << "\n";
+  std::cout << "Test 0: small identical graphs.\n";
+  std::cout << "Test 1: small test graph with one child more (to a leaf) than pattern.\n";
+  std::cout << "Test 2: small test graph with one edge more (leaf -> leaf) than pattern.\n";
+  std::cout << "Test 3: small test graph with one child more (to a leaf) and an edge more (leaf -> root) than pattern.\n";
+  std::cout << "Test 4: same as test 3 but with different labels.\n";
+  std::cout << "Test 5: small test graph with two JCC (that have two children).\n";
 }
 
 
@@ -80,7 +88,7 @@ int main(int argc, char* argv[]){
   
 //   optionLabels=0;
   
- graph_t* grPattern;
+ graph_t** grPattern;
  graph_t* grTest;
   
  FILE* fpPattern;
@@ -89,9 +97,7 @@ int main(int argc, char* argv[]){
  int i=0;
  while (i<std::numeric_limits<int>::max()){
   std::string dirPath = "tests_graphs/test" + std::to_string(i) + "/";
-  std::string pathPattern = dirPath + "pattern.edg";
   std::string pathTest = dirPath + "test.edg";
-  fpPattern = fopen(pathPattern.c_str(), "r");
   fpTest = fopen(pathTest.c_str(), "r");
 
   // read expected results
@@ -127,7 +133,7 @@ int main(int argc, char* argv[]){
   f_res_sidt.close();
   f_res_gtsi.close();
   
-    if (fpPattern == NULL || fpTest == NULL){
+    if (fpTest == NULL){
 //       fprintf(stderr, "Can't open pattern or test graph\n");
       break;
     }
@@ -135,38 +141,62 @@ int main(int argc, char* argv[]){
     std::cout << "Running test " + std::to_string(i) + "\n";
     printf("%s", Color_Off);
     
-    graph_from_file(&grPattern, fpPattern, 1);
+    int j = 0;
+    int nPattern = 0;
+    grPattern = (graph_t**) std::malloc(sizeof(graph_t*));
+    
+    while (j<std::numeric_limits<int>::max()){
+      std::string pathPattern = dirPath + "pattern_" + to_string(j) + ".edg";
+      grPattern = (graph_t**) std::realloc(grPattern, (j+1) * sizeof(graph_t*));
+      fpPattern = fopen(pathPattern.c_str(), "r");
+      
+      if (fpPattern == NULL) break;
+      graph_from_file(&grPattern[j], fpPattern, 1);
+      fclose(fpPattern);
+      j++;
+      nPattern++;
+    }
+    
+    if (nPattern == 0) break;
+    
+//     graph_from_file(&grPattern, fpPattern, 1);
     graph_from_file(&grTest, fpTest, 1);
-    fclose(fpPattern);
     fclose(fpTest);
     
 //     graph_fprint(stdout, grPattern);
 //     graph_fprint(stdout, grTest);
     
     // Ullmann
-    test_Ullmann(grPattern, grTest, expected_ullmann_with_labels, true, " (Check labels)");
-    test_Ullmann(grPattern, grTest, expected_ullmann_no_labels, false, " (Don't check labels)");
+    test_Ullmann(grPattern, nPattern, grTest, expected_ullmann_with_labels, true, " (Check labels)");
+    test_Ullmann(grPattern, nPattern, grTest, expected_ullmann_no_labels, false, " (Don't check labels)");
     std::cout << "\n";
     // SIDT
-    test_SIDT(grPattern, grTest, expected_sidt_with_labels, true, " (Check labels)");
-    test_SIDT(grPattern, grTest, expected_sidt_no_labels, false, " (Don't check labels)");
+    test_SIDT(grPattern, nPattern, grTest, expected_sidt_with_labels, true, " (Check labels)");
+    test_SIDT(grPattern, nPattern, grTest, expected_sidt_no_labels, false, " (Don't check labels)");
     std::cout << "\n";
-    // GTSI
-    test_GTSI(grPattern, grTest, expected_gtsi_with_labels, true, " (Check labels)");
-    test_GTSI(grPattern, grTest, expected_gtsi_no_labels, false, " (Don't check labels)");
+    // GTSIs
+    test_GTSI(grPattern, nPattern, grTest, expected_gtsi_with_labels, true, " (Check labels)");
+    test_GTSI(grPattern, nPattern, grTest, expected_gtsi_no_labels, false, " (Don't check labels)");
     
     std::cout << "\n";
     i++;
  }
 }
 
-void test_Ullmann(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc){
+void test_Ullmann(graph_t** grPattern, int nPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc){
     std::cout << "Ullmann" + desc + ":\n";
     
     if (checkLabels) optionCheckSymb = 1;
     else optionCheckSymb = 0;
     
-    int isoTotal=isoUllman(grPattern, grTest);
+    int i;
+    int isoTotal = 0;
+    
+    for (i = 0; i < nPattern; i++){
+      int res = isoUllman(grPattern[i], grTest);
+      isoTotal += res;
+    }
+      
     char* color;
     if (isoTotal != expected){
       color = Red;
@@ -174,11 +204,12 @@ void test_Ullmann(graph_t* grPattern, graph_t* grTest, int expected, bool checkL
     else{
       color = Green;
     }
+      
     printf("%sisoTotal: %d (expected: %d).%s\n", color, isoTotal, expected, Color_Off);
 }
 
 
-void test_SIDT(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc){
+void test_SIDT(graph_t** grPattern, int nPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc){
     char* color;
     std::cout << "SIDT" + desc + ":\n";
     optionFuncs = 0;
@@ -191,7 +222,12 @@ void test_SIDT(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabe
     char optionOutputDt=0;
     char* pathDT;
     int siteCountLimit=0;
-    int siteSize=grPattern->nodes.count;
+    
+    int i;
+    int siteSize=grPattern[0]->nodes.count;
+    for (i = 1; i < nPattern; i++){
+      if (grPattern[i]->nodes.count < siteSize) siteSize = grPattern[i]->nodes.count;
+    }
     
     char withLabels;
     if (checkLabels) char withLabels=1;
@@ -208,8 +244,13 @@ void test_SIDT(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabe
     decisionTree* dt=newDecisionTree(siteSize, valence);
     std::string st = "Pattern";
     char* msg = (char*) st.c_str();
-    int n_pattern = learnGraph(grPattern, dt, msg, siteCountLimit, withLabels);
-    printf("%d sites learned from pattern graph.\n", n_pattern);
+    
+    int learnt_pattern = 0;
+    for (i = 0; i < nPattern; i++){
+      learnt_pattern += learnGraph(grPattern[i], dt, msg, siteCountLimit, withLabels);
+    }
+    
+    printf("%d sites learned from pattern graph.\n", learnt_pattern);
     int* countByProg= (int*) calloc(dt->nProgs, sizeof(int));
     
     int n=findGraph(grTest, dt, countByProg, scanInfo, scanFuncs, withLabels);
@@ -224,12 +265,22 @@ void test_SIDT(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabe
     
 }
 
-void test_GTSI(graph_t* grPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc){
+void test_GTSI(graph_t** grPattern, int nPattern, graph_t* grTest, int expected, bool checkLabels, std::string desc){
     char* color;
-    int siteSize=grPattern->nodes.count;
     std::cout << "GTSI" + desc + ":\n";
+    
+    int i;
+    int siteSize=grPattern[0]->nodes.count;
+    for (i = 1; i < nPattern; i++){
+      if (grPattern[i]->nodes.count < siteSize) siteSize = grPattern[i]->nodes.count;
+    }
+    
     ParcoursNode* tree = new ParcoursNode();
-    tree->addGraph(grPattern, siteSize, 0, checkLabels);
+    
+    for (i = 0; i < nPattern; i++){
+      tree->addGraph(grPattern[i], siteSize, 0, checkLabels);
+    }
+    
     printf("%d traversals reconstructed from pattern graph.\n", tree->countLeaves());
     
     vsize_t count=tree->parcourir(grTest, siteSize, checkLabels);
