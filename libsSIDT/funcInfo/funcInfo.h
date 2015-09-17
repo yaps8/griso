@@ -1,6 +1,10 @@
 #ifndef INC_FUNCINFO_H
 #define INC_FUNCINFO_H
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 typedef struct ProgInfo {
 	int n;
 	struct ProgFunction** functions;

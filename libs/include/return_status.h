@@ -1,5 +1,5 @@
-#ifndef JD_RETURN_STATUS
-#define JD_RETURN_STATUS
+#ifndef RETURN_STATUS_H
+#define RETURN_STATUS_H
 
 typedef enum {
   STATUS_OK = 0,

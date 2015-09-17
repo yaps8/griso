@@ -12,7 +12,6 @@
 #include <forward_list>
 #include <queue>
 #include "utils-gtsi.h"
-// #include "GTSI.h"
 #include <fstream>
 #include <assert.h>
 using namespace std;
@@ -21,8 +20,6 @@ extern "C" {
 #include "symbol.h"
 #include "graph.h"
 }
-
-// #include "libGTSI.h"
 
 extern char* labCharToString(vsize_t label);
 

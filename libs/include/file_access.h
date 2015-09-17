@@ -1,5 +1,5 @@
-#ifndef JD_FILE_ACCESS_H
-#define JD_FILE_ACCESS_H
+#ifndef FILE_ACCESS_H
+#define FILE_ACCESS_H
 
 /*!
  @file file_access.h

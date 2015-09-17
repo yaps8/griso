@@ -2,9 +2,7 @@
 #define NODE_LIST_H
 
 #include "node.h"
-
-// struct dict;
-
+#include "dict.h"
   
 /*!
  @file node_list.h
@@ -54,6 +52,8 @@ typedef struct node_list_t {
  @param list The list to initialize.
  */
 void node_list_build(node_list_t * list, vsize_t max_size);
+
+void node_list_add(node_list_t * list, node_t* node);
 
 /*!
  @brief Free all internal structures used.

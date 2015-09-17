@@ -1,6 +1,9 @@
 #ifndef GRAPHIO_H
 #define GRAPHIO_H
 
+#include "nodeIO.h"
+#include "file_access.h"
+
 /*!
  @file graphIO.h
  @brief Structure and methods for rooted and directed graphs input/output support.

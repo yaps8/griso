@@ -1,4 +1,3 @@
-#include "file_access.h"
 #include "nodeIO.h"
 
 size_t node_to_dot(const node_t* node, const node_t* root, size_t node_number,FILE* fp) {

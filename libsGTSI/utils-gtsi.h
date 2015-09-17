@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_GTSI_H
+#define UTILS_GTSI_H
 
 #include <string>
 

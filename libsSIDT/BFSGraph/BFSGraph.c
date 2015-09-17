@@ -1,7 +1,4 @@
 #include "BFSGraph.h"
-#include "funcInfo.h"
-//#include "graphIO.h"
-//#include "ga_types.h"
 
 NGraph* newNGraph(int i, char k){
 	NGraph* ng=malloc(sizeof(NGraph));

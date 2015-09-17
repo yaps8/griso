@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "prog.h"
 
 prog* newProg(char* msg, int n){

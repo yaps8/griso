@@ -1,7 +1,4 @@
 #include "funcInfo.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 ProgInfo* newProgInfo(int n){
 	ProgInfo* prgFuncs=malloc(sizeof(ProgInfo));

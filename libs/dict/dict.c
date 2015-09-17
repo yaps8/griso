@@ -1,6 +1,7 @@
+#ifndef DICT_C
+#define DICT_C
+
 #include "dict.h"
-
-
 
 int compar(const void *l, const void *r)
 {
@@ -40,6 +41,16 @@ node_t* dict_find(struct dict* d, uint64_t k){
 }
 
 
+void dict_delete(struct dict* d, uint64_t k){
+  dictPair* p = malloc(sizeof(dictPair));
+  p->key = k;
+  
+  tdelete(p, &d->root, compar);
+}
+
+
 void dict_free(struct dict* d){
   tdestroy(d->root, free);
 }
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef JD_SWAP_H
-#define JD_SWAP_H
+#ifndef SWAP_H
+#define SWAP_H
 
 /* Swap macros */
 #define SWAP16(x) ((uint16_t)((((uint16_t)(x) & 0xFF00) >> 8) | \

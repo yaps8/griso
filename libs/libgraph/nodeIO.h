@@ -1,6 +1,8 @@
 #ifndef MK_NODEIO_H
 #define MK_NODEIO_H
 
+#include "file_access.h"
+
 /*!
  @file nodeIO.h
  @brief Input/Output support for nodes.

@@ -1,6 +1,4 @@
-#include "file_access.h"
 #include "graphIO.h"
-#include "nodeIO.h"
 
 #define GRAPHBINMAGIC "GRAPHBIN"
 #define GRAPHBINMAGIC_LEN 8
@@ -221,10 +219,8 @@ void graph_fprint(FILE* fp, graph_t* graph) {
   
   for (i=0; i<graph->nodes.count; i++){
       node_t node = graph->nodes.storage[i];
-      if (node.children_nb!=0 || node.fathers_nb!=0){
-	      node_to_dot(&node,(node_t*)&graph->root->node_id, i, fp);
-	      node_edges_to_dot(&node, fp);
-      }
+	  node_to_dot(&node,(node_t*)&graph->root->node_id, i, fp);
+	  node_edges_to_dot(&node, fp);
   }
 
 

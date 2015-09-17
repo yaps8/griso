@@ -1,3 +1,6 @@
+#ifndef DECISIONTREE_H
+#define DECISIONTREE_H
+
 #include "decisionNode.h"
 #include "BFSGraph.h"
 //#include "matchInfo.h"
@@ -24,3 +27,4 @@ int countLeavesDT(decisionTree* dt);
 void freeDecisionTree(decisionTree* dt);
 void addProgToDT(decisionTree* dt, prog* prg);
 
+#endif

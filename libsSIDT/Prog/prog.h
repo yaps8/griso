@@ -1,6 +1,8 @@
 #ifndef INC_PROG_H
 #define INC_PROG_H
 
+#include <stdlib.h>
+
 typedef struct prog {
 	char* message;
 	unsigned int index;

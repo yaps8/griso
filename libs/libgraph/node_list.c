@@ -1,14 +1,33 @@
 #include "node_list.h"
 
-#include "node.h"
-
-#include "dict.h"
 
 void node_list_build(node_list_t * list, vsize_t max_size) {
   list->size = max_size;
   list->count = 0;
   list->storage = MY_ZALLOC(max_size, node_t);
   list->nodes_dict = dict_alloc();
+}
+
+void node_list_add(node_list_t * list, node_t* node) {
+  node_t* r = dict_find(list->nodes_dict, node->node_id);
+  
+  if (r == NULL){
+    // new node
+    list->size++;
+    list->storage = (node_t*) realloc(list->storage , list->size * sizeof(node_t));
+
+    list->storage[list->size-1].symb = node->symb;
+    list->storage[list->size-1].node_id = node->node_id;
+    list->storage[list->size-1].list_id = list->count;
+    list->count++;
+
+    node_t* rr = dict_insert(list->nodes_dict, node->node_id, &list->storage[list->size-1]);
+    printf("insert: %p %p\n", rr, &list->storage[list->size-1]);
+  }
+  else {
+    // node already exists 
+    printf("Warning: node %x already exists in graph (it was NOT duplicated).\n", node->node_id);
+  }
 }
 
 void node_list_free(node_list_t * list) {
