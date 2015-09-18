@@ -4,30 +4,7 @@
 
 #include "main.h"
  
-graph_t *getGraph(const char *expr)
-{
-    graph_t *graph;
-    yyscan_t scanner;
-    YY_BUFFER_STATE state;
- 
-    if (yylex_init(&scanner)) {
-        // couldn't initialize
-        return NULL;
-    }
- 
-    state = yy_scan_string(expr, scanner);
- 
-    if (yyparse(&graph, scanner)) {
-        // error parsing
-        return NULL;
-    }
- 
-    yy_delete_buffer(state, scanner);
- 
-    yylex_destroy(scanner);
- 
-    return graph;
-}
+
  
 int main(void)
 {

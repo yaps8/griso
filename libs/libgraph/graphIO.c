@@ -1,8 +1,5 @@
 #include "graphIO.h"
 
-#define GRAPHBINMAGIC "GRAPHBIN"
-#define GRAPHBINMAGIC_LEN 8
-
 size_t graph_to_file(graph_t* graph, FILE* fp) {
   struct node_list_iterator_t* node_it;
   size_t ret, count;
@@ -57,7 +54,7 @@ size_t graph_to_file(graph_t* graph, FILE* fp) {
   return ret;
 }
 
-status_t graph_from_file(graph_t** pgraph, FILE* fp, char optionLabels) {
+status_t graph_from_file(graph_t** pgraph, FILE* fp) {  
   node_t* node, *new_node;
   vsize_t count;
   graph_t * graph = NULL;
@@ -85,8 +82,7 @@ status_t graph_from_file(graph_t** pgraph, FILE* fp, char optionLabels) {
       /* it's a node */
       node_from_file(node, fp);
       new_node = node_list_append(&graph->nodes, node->node_id);
-      if (optionLabels) new_node->symb = node->symb;
-      else new_node->symb = INST_UNDEF;
+      new_node->symb = node->symb;
       break;
 
     case 'e': {
@@ -149,12 +145,18 @@ status_t graph_from_file(graph_t** pgraph, FILE* fp, char optionLabels) {
   }*/
 
   node_free(node);
+  graph_fprint(stdout, graph);
   return STATUS_OK;
 
   broken_file:
-  fprintf(stderr, "graph dump file is broken\n");
   node_free(node);
   graph_free(graph);
+  
+  rewind(fp);
+  *pgraph = (graph_t*) getGraphFromFile(fp);
+  
+  if (*pgraph != NULL) return STATUS_OK;
+  fprintf(stderr, "graph dump file is broken\n");
 
   return STATUS_INVALID_FILE;
 }

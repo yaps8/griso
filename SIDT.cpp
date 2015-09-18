@@ -149,7 +149,9 @@ int main(int argc, char* argv[]){
 
 	if (optionLearn){
 		graph_t* gr;
-		graph_from_file(&gr, fpPattern, optionLabels);
+// 		graph_from_file(&gr, fpPattern);
+// 		gr = getGraphFromFile(fpPattern);
+// 		int e = test43(4);
 		fclose(fpPattern);
 
 		char* msg= (char*) malloc((strlen(pathPattern)+1)*sizeof(char));
@@ -159,15 +161,15 @@ int main(int argc, char* argv[]){
 		graph_free(gr);
 
 		if (optionTest){
-			graph_from_file(&gr, fpTest, optionLabels);
-			fclose(fpTest);
+			graph_from_file(&gr, fpTest);
+// 			fclose(fpTest);
 
 			int* countByProg= (int*) calloc(dt->nProgs, sizeof(int));
 			int* scanFuncs;
 			if (optionFuncs) scanFuncs= (int*) calloc(scanInfo->n, sizeof(int));
 			n=findGraph(gr, dt, countByProg, scanInfo, scanFuncs, withLabels);
 			printf("%d sites of %s found from %s\n", n, pathTest, dt->progs[0]->message);
-      printf("Pattern graph %s has %d sites ; test graph %s has %d sites found matching.\n", pathPattern, n_pattern, pathTest, n);
+			printf("Pattern graph %s has %d sites ; test graph %s has %d sites found matching.\n", pathPattern, n_pattern, pathTest, n);
 			if (optionFuncs){
 				printf("\nFunctions found: \n");
 				int k;
@@ -199,7 +201,7 @@ int main(int argc, char* argv[]){
 				continue;
 			}
 
-			char a=graph_from_file(&gr, fp, optionLabels);
+			char a=graph_from_file(&gr, fp);
 			fclose(fp);
 			if (a!=0){
 				if (optionInfo) fprintf(stderr, "%d, This file is not a valid graph: %s\n", i, line);
@@ -234,7 +236,7 @@ int main(int argc, char* argv[]){
 					continue;
 				}
 
-				char a=graph_from_file(&gr, fp, optionLabels);
+				char a=graph_from_file(&gr, fp);
 				fclose(fp);
 				if (a!=0){
 					if (optionInfo) fprintf(stderr, "%d, This file is not a valid graph: %s\n", i, line);

@@ -156,7 +156,7 @@ int main(int argc, char* argv[]){
   
 	if (optionLearn){
 		graph_t* gr;
-		graph_from_file(&gr, fpPattern, optionLabels);
+		graph_from_file(&gr, fpPattern);
 		fclose(fpPattern);
     
     if (not useTree){
@@ -177,7 +177,7 @@ int main(int argc, char* argv[]){
     graph_free(gr);
 
 		if (optionTest){
-			graph_from_file(&gr, fpTest, optionLabels);
+			graph_from_file(&gr, fpTest);
 			fclose(fpTest);
       
       if (not useTree){
@@ -220,7 +220,7 @@ int main(int argc, char* argv[]){
 				continue;
 			}
 
-			char a=graph_from_file(&gr, fp, optionLabels);
+			char a=graph_from_file(&gr, fp);
 			fclose(fp);
 			if (a!=0){
 				if (optionInfo) fprintf(stderr, "%d, This file is not a valid graph: %s\n", i, line);
@@ -270,7 +270,7 @@ int main(int argc, char* argv[]){
 					continue;
 				}
 
-				char a=graph_from_file(&gr, fp, optionLabels);
+				char a=graph_from_file(&gr, fp);
 				fclose(fp);
 				if (a!=0){
 					if (optionInfo) fprintf(stderr, "%d, This file is not a valid graph: %s\n", i, line);

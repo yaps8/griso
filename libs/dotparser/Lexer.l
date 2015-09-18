@@ -29,24 +29,22 @@ EQ        "="
 VIRG        ","
 ARROW      "->"
  
-NUMBER      [0-9]+
 WS          [ \r\n\t]*
  
 %%
  
 {WS}            { /* Skip blanks. */ }
-{NUMBER}        { sscanf(yytext, "%d", &yylval->value); return TOKEN_NUMBER; }
  
-{DIGRAPH_HEADER}      { printf("digraph header!\n"); return TOKEN_DIGRAPH_HEADER; }
-{ID}        	{ printf("id: "); yylval->type_string = strdup(yytext); printf("%s\n", yylval->type_string); return TOKEN_ID; }
-{OPTION_STR}    { printf("option_str :"); yylval->type_string = strdup(yytext); printf("%s\n", yylval->type_string); return TOKEN_ID; }
-{LENS}        { printf("lens!\n"); return TOKEN_LENS; }
-{RENS}        { printf("rens!\n"); return TOKEN_RENS; }
-{LCRO}        { printf("lcro!\n"); return TOKEN_LCRO; }
-{RCRO}        { printf("rcro!\n"); return TOKEN_RCRO; }
-{EQ}        { printf("eq!\n"); return TOKEN_EQ; }
-{VIRG}        { printf("virg!\n"); return TOKEN_VIRG; }
-{ARROW}        { printf("arrow!\n"); return TOKEN_ARROW; }
+{DIGRAPH_HEADER}      { debug_print("digraph header!\n"); return TOKEN_DIGRAPH_HEADER; }
+{ID}        	{ debug_print("id: "); yylval->type_string = strdup(yytext); return TOKEN_ID; }
+{OPTION_STR}    { debug_print("option_str :"); yylval->type_string = strdup(yytext); return TOKEN_ID; }
+{LENS}        { debug_print("lens!\n"); return TOKEN_LENS; }
+{RENS}        { debug_print("rens!\n"); return TOKEN_RENS; }
+{LCRO}        { debug_print("lcro!\n"); return TOKEN_LCRO; }
+{RCRO}        { debug_print("rcro!\n"); return TOKEN_RCRO; }
+{EQ}        { debug_print("eq!\n"); return TOKEN_EQ; }
+{VIRG}        { debug_print("virg!\n"); return TOKEN_VIRG; }
+{ARROW}        { debug_print("arrow!\n"); return TOKEN_ARROW; }
 .               {  }
  
 %%

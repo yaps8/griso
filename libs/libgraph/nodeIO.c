@@ -4,43 +4,51 @@ size_t node_to_dot(const node_t* node, const node_t* root, size_t node_number,FI
   size_t ret;
 
   ret = fprintf(fp, "\"%"PRIx64"\" [label = \"%"PRIx64"(%d) : ", node->node_id, node->node_id, node_number);
+  char* symb;
+  
   switch (node->symb) {
   case INST_SEQ:
-    ret += fprintf(fp, "INST");
+    symb = "INST";
     break;
   case INST_RET:
-    ret += fprintf(fp, "RET");
+    symb = "RET";
     break;
   case INST_CALL:
-    ret += fprintf(fp, "CALL");
+    symb = "CALL";
     break;
   case INST_JCC:
-    ret += fprintf(fp, "JCC");
+    symb = "JCC";
     break;
   case INST_JMP:
-    ret += fprintf(fp, "JUMP");
+    symb = "JUMP";
     break;
   case INST_END:
-    ret += fprintf(fp, "HLT");
+    symb = "HLT";
     break;
   case INST_UREACH:
-    ret += fprintf(fp, "UNREACHEABLE");
+    symb = "UNREACHEABLE";
     break;
   case INST_UNDEF:
-    ret += fprintf(fp, "UNDEFINED");
+    symb = "UNDEFINED";
     break;
   case INST_SCALL:
-    ret += fprintf(fp, "INT");
+    symb = "INT";
     break;
   default:
   case SYMB_END:
-    ret += fprintf(fp, "ERROR");
+    symb = "ERROR";
     break;
   }
+  
+  ret += fprintf(fp, symb);
+  ret += fprintf(fp, "\"");
+  ret += fprintf(fp, ", symb = ");
+  ret += fprintf(fp, symb);
+  
   if (node == root)
-     ret += fprintf(fp, "\" style=\"bold,filled\",fillcolor=yellow]\n");
+     ret += fprintf(fp, ", style=\"bold,filled\", fillcolor=yellow]\n");
   else
-	  ret += fprintf(fp, "\"]\n");
+	  ret += fprintf(fp, "]\n");
 
   return ret;
 }

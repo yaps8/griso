@@ -20,7 +20,7 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-  graph_from_file(&gr, fpIn, 1);
+  graph_from_file(&gr, fpIn);
   fclose(fpIn);
 
   graph_fprint(fpOut, gr);

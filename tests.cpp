@@ -97,8 +97,9 @@ int main(int argc, char* argv[]){
  int i=0;
  while (i<std::numeric_limits<int>::max()){
   std::string dirPath = "tests_graphs/test" + std::to_string(i) + "/";
-  std::string pathTest = dirPath + "test.edg";
-  fpTest = fopen(pathTest.c_str(), "r");
+//   std::string pathTest = dirPath + "test.edg";
+  std::string pathTest = dirPath + "test.dot";
+//   fpTest = fopen(pathTest.c_str(), "r");
 
   // read expected results
   int expected_ullmann_with_labels = -1;
@@ -146,25 +147,26 @@ int main(int argc, char* argv[]){
     grPattern = (graph_t**) std::malloc(sizeof(graph_t*));
     
     while (j<std::numeric_limits<int>::max()){
-      std::string pathPattern = dirPath + "pattern_" + to_string(j) + ".edg";
+      std::string pathPattern = dirPath + "pattern_" + to_string(j) + ".dot";
       grPattern = (graph_t**) std::realloc(grPattern, (j+1) * sizeof(graph_t*));
       fpPattern = fopen(pathPattern.c_str(), "r");
       
       if (fpPattern == NULL) break;
-      graph_from_file(&grPattern[j], fpPattern, 1);
       fclose(fpPattern);
+      grPattern[j] = getGraphFromPath(pathPattern.c_str());
+//       graph_from_file(&grPattern[j], fpPattern);
       j++;
       nPattern++;
     }
     
     if (nPattern == 0) break;
     
-//     graph_from_file(&grPattern, fpPattern, 1);
-    graph_from_file(&grTest, fpTest, 1);
-    fclose(fpTest);
+//     graph_from_file(&grTest, fpTest);
+    grTest = getGraphFromPath(pathTest.c_str());
+//     fclose(fpTest);
     
 //     graph_fprint(stdout, grPattern);
-//     graph_fprint(stdout, grTest);
+    graph_fprint(stdout, grTest);
     
     // Ullmann
     test_Ullmann(grPattern, nPattern, grTest, expected_ullmann_with_labels, true, " (Check labels)");

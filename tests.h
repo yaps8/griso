@@ -12,6 +12,7 @@
 extern "C" {
 #include "graphIO.h"
 #include "libGraphBinAlgo.h"
+#include "graphParser.h"
 }
 
 #include "libSIDT.h"

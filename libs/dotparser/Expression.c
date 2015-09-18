@@ -41,19 +41,21 @@ SExpression *createID(char* str_value)
     return b;
 }
 
+void debug_print(char* s){
+  if (1==0) printf("%s", s);
+}
+
 graph_t* fixDict(graph_t* g){
   vsize_t i;
   for (i=0; i<g->nodes.size; i++){
-    printf("deleting and adding again...\n");
     dict_delete(g->nodes.nodes_dict, g->nodes.storage[i].node_id);
-    dict_insert(g->nodes.nodes_dict, g->nodes.storage[i].node_id, &g->nodes.storage[i]);
+    node_t* n = dict_insert(g->nodes.nodes_dict, g->nodes.storage[i].node_id, &g->nodes.storage[i]);
   }
   
   return g;
 }
 
 CoupleList* createEdgeList(){
-  printf("create edge list\n");
   CoupleList* cl = (CoupleList*) malloc(sizeof(CoupleList));
   cl->size = 0;
   cl->couples = NULL;
@@ -62,7 +64,6 @@ CoupleList* createEdgeList(){
 }
 
 CoupleList* addEdgeToList(Couple* c, CoupleList* cl){
-  printf("adding edge\n");
   if (cl->couples == NULL){
     cl->couples = (Couple**) malloc(sizeof(Couple*));
   }
@@ -83,15 +84,13 @@ Couple* createEdge(char* f, char* c){
 }
 
 graph_t* addEdgesToGraph(CoupleList* cl, graph_t* g){
-  vsize_t i;
+  int i;
   node_t* f;
   node_t* c;
   
-  for (i=0; i<cl->size; i++){
+  for (i=cl->size-1; i>=0; i--){
     f = dict_find(g->nodes.nodes_dict, cl->couples[i]->x);
     c = dict_find(g->nodes.nodes_dict, cl->couples[i]->y);
-    
-    printf("%x -> %x\n", f->node_id, c->node_id);
     
     if (f == NULL || c == NULL){
 	printf("WARNING: when adding a node, father or child was not found in graph.\n");
@@ -109,7 +108,7 @@ graph_t* addEdgesToGraph(CoupleList* cl, graph_t* g){
     }
   }
   
-  graph_fprint(stdout, g);
+//   graph_fprint(stdout, g);
   return g;
 }
 
@@ -127,9 +126,10 @@ uint hash(char* s) {
 
 node_t *createNode(char* value){
   uint id = hash(value);
-  printf("create node %s: %x\n", value, id);
 
   node_t* node = (node_t*) malloc(sizeof(node_t));
+  node->children = NULL;
+  node->fathers = NULL;
   node->children_nb = 0;
   node->fathers_nb = 0;
   node->explored = UNEXPLORED;
@@ -142,7 +142,6 @@ node_t *createNode(char* value){
 
 graph_t *createGraph()
 {
-  printf("create graph\n");
 //   node_t* node;
   graph_t* graph = NULL;
 
@@ -157,72 +156,95 @@ graph_t *createGraph()
 //   node->symb = INST_SEQ;
 //   graph->root = node;
   
-  graph_fprint(stdout, graph);
+//   graph_fprint(stdout, graph);
 
   return graph;
 }
 
 graph_t* addNodeToGraph(node_t* n, graph_t* g){
-  printf("adding node\n");
   node_list_add(&g->nodes, n);
   node_t* r = dict_find(g->nodes.nodes_dict, n->node_id);
-  printf("added: %p %p\n", g->nodes.storage[g->nodes.size-1], r);
   
   if (g->nodes.size == 1) g->root = n;
   
-  node_to_dot(n,(node_t*)&g->root->node_id, n->node_id, stdout);
+//   node_to_dot(n,(node_t*)&g->root->node_id, n->node_id, stdout);
   return g;
 }
 
-int strToSymb(char* s){
+char* removeQuotes(char* s){
+  char* s2 = malloc(strlen(s) * sizeof(char));
+  int i;
+  int k=0;
+  
+  for (i=0; i<strlen(s); i++){
+    if (s[i] != '"'){
+      s2[k] = s[i];
+      k++;
+    }
+  }
+  s2[k]=0;
+  
+  return s2;
+}
+
+int strToSymb(char* st){
+  char* s = removeQuotes(st);
+  int r;
+  
   if (strcmp(s, "INIT") == 0) {
-      return 0;
+      r = SYMB_INIT;
   }
   else if (strcmp(s, "RET") == 0) {
-      return 1;
+      r = INST_RET;
   }
   else if (strcmp(s, "CALL") == 0) {
-      return 2;
+      r = INST_CALL;
   }
   else if (strcmp(s, "JMP") == 0) {
-      return 3;
+      r = INST_JMP;
   }
   else if (strcmp(s, "END") == 0) {
-      return 4;
+      r = INST_END;
   }
   else if (strcmp(s, "SCALL") == 0) {
-      return 5;
+      r = INST_SCALL;
   }
-  else if (strcmp(s, "UREAC") == 0) {
-      return 6;
+  else if (strcmp(s, "UREACH") == 0) {
+      r = INST_UREACH;
   }
   else if (strcmp(s, "UNDEF") == 0) {
-      return 7;
+      r = INST_UNDEF;
   }
   else if (strcmp(s, "JCC") == 0) {
-      return 8;
+      r = INST_JCC;
   }
   else if (strcmp(s, "SEQ") == 0 || strcmp(s, "INST") == 0) {
-      return 9;
+      r = INST_SEQ;
   }
   else if (strcmp(s, "PATH") == 0) {
-      return 10;
+      r = SYMB_PATH;
   }
   else if (strcmp(s, "END") == 0) {
-      return 11;
+      r = INST_END;
   }
   else{
-      return 7;
+      r = -1;
   }
+  free(s);
+  return r;
 }
 
 node_t* updateNode(OptionList* ol, node_t* n){
-  printf("!!nid: %d\n", (int) n->node_id);
-  
   int i;
+  char hasSymb = 0;
+  
   for (i=0; i<ol->size; i++){
-      if (strcmp(ol->options[i]->id, "label") == 0){
+      if (hasSymb == 0 && strcmp(ol->options[i]->id, "label") == 0){
 	  n->symb = strToSymb(ol->options[i]->value);
+      }
+      else if (strcmp(ol->options[i]->id, "symb") == 0){
+	  n->symb = strToSymb(ol->options[i]->value);
+	  hasSymb = 1;
       }
   }
   
@@ -230,7 +252,6 @@ node_t* updateNode(OptionList* ol, node_t* n){
 }
 
 OptionList* createOptionList(){
-  printf("create option list\n");
   OptionList* ol = (OptionList*) malloc(sizeof(OptionList));
   ol->size = 0;
   ol->options = NULL;
@@ -239,7 +260,6 @@ OptionList* createOptionList(){
 }
 
 OptionList* addOptionToList(Option* o, OptionList* ol){
-  printf("adding option\n");
   if (ol->options == NULL){
     ol->options = (Option**) malloc(sizeof(Option*));
   }
@@ -253,7 +273,6 @@ OptionList* addOptionToList(Option* o, OptionList* ol){
 }
 
 Option* createOption(char* I, char* V){
-  printf("create option\n");
   Option* o = (Option*) malloc(sizeof(Option));
   
   char* key = (char*) malloc(strlen(I) * sizeof(char));
@@ -264,42 +283,4 @@ Option* createOption(char* I, char* V){
   
   o->id = key;
   o->value = value;
-}
-
-SExpression *createNumber(int value)
-{
-    SExpression *b = allocateExpression();
-
-    if (b == NULL)
-        return NULL;
-
-    b->type = eVALUE;
-    b->value = value;
-
-    return b;
-}
-
-SExpression *createOperation(EOperationType type, SExpression *left, SExpression *right)
-{
-    SExpression *b = allocateExpression();
-
-    if (b == NULL)
-        return NULL;
-
-    b->type = type;
-    b->left = left;
-    b->right = right;
-
-    return b;
-}
-
-void deleteExpression(SExpression *b)
-{
-    if (b == NULL)
-        return;
-
-    deleteExpression(b->left);
-    deleteExpression(b->right);
-
-    free(b);
 }

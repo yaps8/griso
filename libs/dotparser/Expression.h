@@ -62,6 +62,8 @@ Couple* createEdge(char* f, char* c);
 
 graph_t* addEdgesToGraph(CoupleList* cl, graph_t* g);
 
+void debug_print(char* s);
+
 typedef struct Option
 {
   char* id;
@@ -83,33 +85,6 @@ OptionList* addOptionToList(Option* o, OptionList* ol);
 Option* createOption(char* I, char* V);
 
 /**
- * @brief Options
- */
-/*
-enum option_type
-{
-    OPTION_UNKNOWN,
-    OPTION_LABEL,
-    OPTION_ROOT,
-    OPTION_FILLCOLOR,
-    OPTION_TEST
-};*/
-
-/**
- * @brief It creates an identifier
- * @param value The number value
- * @return The expression or NULL in case of no memory
- */
-SExpression *createNumber(int value);
-
-/**
- * @brief It creates an ID
- * @param value The ID value
- * @return The expression or NULL in case of no memory
- */
-SExpression *createID(char* value);
-
-/**
  * @brief It creates a node
  * @param value The name of the node
  * @return The graph or NULL in case of no memory
@@ -122,19 +97,4 @@ graph_t *createGraph();
 
 graph_t* addNodeToGraph(node_t* n, graph_t* g);
 
-/**
- * @brief It creates an operation
- * @param type The operation type
- * @param left The left operand
- * @param right The right operand
- * @return The expression or NULL in case of no memory
- */
-SExpression *createOperation(EOperationType type, SExpression *left, SExpression *right);
-
-/**
- * @brief Deletes a expression
- * @param b The expression
- */
-void deleteExpression(SExpression *b);
-
-#endif // __EXPRESSION_H__
+#endif

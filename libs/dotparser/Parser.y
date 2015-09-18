@@ -36,7 +36,6 @@ typedef void* yyscan_t;
 %union {
     char* type_string;
     int value;
-    SExpression *expression2;
     graph_t* Sgraph;
     node_t* Snode;
     Option* Soption;
@@ -84,7 +83,7 @@ graph
 node_list
     :
     {$<Sgraph>$ = createGraph();}
-    | node_list[G] node[nG] { printf("nnn\n"); $$ = addNodeToGraph($nG, $G); }
+    | node_list[G] node[nG] { $$ = addNodeToGraph($nG, $G); }
     | error { printf("Error parsing a node_list.\n"); }
     ;
    
@@ -101,8 +100,8 @@ node_id
 option_list
     :
     {$<SoptionList>$ = createOptionList();}
-    | option[O] option_list[L] {printf("listlist1\n"); $$ = addOptionToList($O, $L); }
-    | option[O] TOKEN_VIRG option_list[L] {printf("listlist2\n"); $$ = addOptionToList($O, $L); }
+    | option[O] option_list[L] { $$ = addOptionToList($O, $L); }
+    | option[O] TOKEN_VIRG option_list[L] { $$ = addOptionToList($O, $L); }
     | error { printf("Error parsing an option_list.\n"); }
     ;
     
@@ -113,8 +112,8 @@ option
     
 edge_list
     :
-    {$<SoptionList>$ = createEdgeList();}
-    | edge[E] edge_list[L] {printf("edgeedge2\n"); $$ = addEdgeToList($E, $L); }
+    {$<SedgeList>$ = createEdgeList();}
+    | edge[E] edge_list[L] { $$ = addEdgeToList($E, $L); }
     | error { printf("Error parsing an edge_list.\n"); }
     ;
     

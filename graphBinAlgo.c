@@ -245,7 +245,7 @@ int main(int argc, char* argv[]){
 
 			if (is_graphbin_file(fpPattern)){
 				graph_t* gr;
-				graph_from_file(&gr, fpPattern, optionLabels);
+				graph_from_file(&gr, fpPattern);
 				fclose(fpPattern);
 
 				if (optionInfo){
@@ -334,11 +334,12 @@ int main(int argc, char* argv[]){
 	else{
 		if (is_graphbin_file(fpPattern) && is_graphbin_file(fpToTest)){
 			graph_t* grPattern;
-			char openP=graph_from_file(&grPattern, fpPattern, optionLabels);
+			char openP=graph_from_file(&grPattern, fpPattern);
+			int e = test43(4);
 			fclose(fpPattern);
 
 			graph_t* grToTest;
-			char openT=graph_from_file(&grToTest, fpToTest, optionLabels);
+			char openT=graph_from_file(&grToTest, fpToTest);
 			fclose(fpToTest);
 
 			if (openP!=0 || openT!=0){

@@ -19,20 +19,7 @@ include_directories(
 )
 
 #shared libs
-add_library(graph
-      libs/libgraph/graph.h
-      libs/libgraph/graph.c
-      libs/libgraph/graphIO.h
-      libs/libgraph/graphIO.c
-      libs/libgraph/node.h
-      libs/libgraph/node.c
-      libs/libgraph/node_list.h
-      libs/libgraph/node_list.c
-      libs/libgraph/nodeIO.h
-      libs/libgraph/nodeIO.c
-      libs/dict/dict.c
-      libs/dict/dict.h
-)
+
 
 #add_library(dict 
 #      libs/dict/dict.c
@@ -49,7 +36,7 @@ ADD_CUSTOM_COMMAND(
    COMMAND flex
    ARGS    libs/dotparser/Lexer.l
    DEPENDS  libs/dotparser/Lexer.l
-   )
+)
 
 # Create custom command for bison/yacc (note the DEPENDS)
 ADD_CUSTOM_COMMAND(
@@ -58,18 +45,40 @@ ADD_CUSTOM_COMMAND(
    ARGS -y libs/dotparser/Parser.y
    DEPENDS Lexer.c
    DEPENDS libs/dotparser/Parser.y
-   )
+)
 
 # Add parser.c to the list of sources
 # SET(Foo_SRCS ${Foo_SRCS} Parser.c)
 
-# Since parser.c does not exists yet when cmake is run, mark
-# it as generated
-SET_SOURCE_FILES_PROPERTIES(libs/dotparser/Parser.c GENERATED)
-
 #add_library(parser Parser.c Lexer.c)
+#add_library(libsimpledotparser 
+#			libs/dotparser/graphParser.c 
+#			Lexer.c 
+#			Parser.c 
+#			libs/dotparser/Expression.c
+#)
+add_library(graph
+      libs/libgraph/graph.h
+      libs/libgraph/graph.c
+      libs/libgraph/graphIO.h
+      libs/libgraph/graphIO.c
+      libs/libgraph/node.h
+      libs/libgraph/node.c
+      libs/libgraph/node_list.h
+      libs/libgraph/node_list.c
+      libs/libgraph/nodeIO.h
+      libs/libgraph/nodeIO.c
+      libs/dict/dict.c
+      libs/dict/dict.h
+      libs/dotparser/graphParser.c 
+	  Lexer.c 
+	  Parser.c 
+	  libs/dotparser/Expression.c
+)
+add_executable(sdp libs/dotparser/main.c)
 
-add_executable(sdp libs/dotparser/main.c Lexer.c Parser.c libs/dotparser/Expression.c)
+#add_executable(sdp libs/dotparser/main.c libs/dotparser/graphParser.c Lexer.c Parser.c libs/dotparser/Expression.c)
+#target_link_libraries(graph libsimpledotparser)
 target_link_libraries(sdp graph)
 
 #SIDT
@@ -107,3 +116,7 @@ target_link_libraries(tests libGTSI libSIDT libGraphBinAlgo graph decisionTree B
 # edg2dot
 add_executable(edg2dot edg2dot.cpp)
 target_link_libraries(edg2dot graph)
+
+# dot2edg
+add_executable(dot2edg dot2edg.cpp)
+target_link_libraries(dot2edg graph)

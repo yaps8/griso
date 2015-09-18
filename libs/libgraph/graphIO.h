@@ -1,6 +1,9 @@
 #ifndef GRAPHIO_H
 #define GRAPHIO_H
 
+#define GRAPHBINMAGIC "GRAPHBIN"
+#define GRAPHBINMAGIC_LEN 8
+
 #include "nodeIO.h"
 #include "file_access.h"
 
@@ -27,7 +30,7 @@ size_t graph_to_file(graph_t* graph, FILE* fp);
  @param fp The file where containing the serialization.
  @return Error status.
  */
-status_t graph_from_file(graph_t** pgraph, FILE* fp, char);
+status_t graph_from_file(graph_t** pgraph, FILE* fp);
 
 /*!
  @brief Print a a graph.

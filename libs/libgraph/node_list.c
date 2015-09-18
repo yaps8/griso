@@ -16,13 +16,11 @@ void node_list_add(node_list_t * list, node_t* node) {
     list->size++;
     list->storage = (node_t*) realloc(list->storage , list->size * sizeof(node_t));
 
-    list->storage[list->size-1].symb = node->symb;
-    list->storage[list->size-1].node_id = node->node_id;
+    list->storage[list->size-1] = *node;
     list->storage[list->size-1].list_id = list->count;
     list->count++;
 
     node_t* rr = dict_insert(list->nodes_dict, node->node_id, &list->storage[list->size-1]);
-    printf("insert: %p %p\n", rr, &list->storage[list->size-1]);
   }
   else {
     // node already exists 
