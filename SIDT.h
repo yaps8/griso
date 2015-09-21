@@ -6,6 +6,6 @@
 
 char optionFuncs;
 char optionLabels;
-void printUsage();
+void printUsage ();
 
 #endif

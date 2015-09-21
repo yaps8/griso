@@ -145,7 +145,7 @@ status_t graph_from_file(graph_t** pgraph, FILE* fp) {
   }*/
 
   node_free(node);
-  graph_fprint(stdout, graph);
+//   graph_fprint(stdout, graph);
   return STATUS_OK;
 
   broken_file:
@@ -193,7 +193,7 @@ status_t graph_from_file(graph_t** pgraph, FILE* fp) {
 //	}
 //}
 
-int is_graphbin_file(FILE* fp) {
+int is_graphbin_file (FILE* fp) {
   char magic[GRAPHBINMAGIC_LEN];
 
   if (fseek(fp, 0L, SEEK_SET) != 0)

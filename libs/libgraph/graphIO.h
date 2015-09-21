@@ -22,7 +22,7 @@
  @param fp The file to serialize the graph to.
  @return Number of written bytes.
  */
-size_t graph_to_file(graph_t* graph, FILE* fp);
+size_t graph_to_file (graph_t * graph, FILE * fp);
 
 /*!
  @brief Read a graph from a serialization.
@@ -30,20 +30,20 @@ size_t graph_to_file(graph_t* graph, FILE* fp);
  @param fp The file where containing the serialization.
  @return Error status.
  */
-status_t graph_from_file(graph_t** pgraph, FILE* fp);
+status_t graph_from_file (graph_t ** pgraph, FILE * fp);
 
 /*!
  @brief Print a a graph.
  @param graph The graph to print.
  @param fp The file to print the graph to.
  */
-void graph_fprint(FILE* fp, graph_t* graph);
+void graph_fprint (FILE * fp, graph_t * graph);
 
 /*!
  @brief Test if file is a serialized graph.
  @param fp The file to test.
  @return Not null if file is a serialized graph.
  */
-int is_graphbin_file(FILE* fp);
+int is_graphbin_file (FILE * fp);
 
 #endif /* JD_GRAPHIO_H */
