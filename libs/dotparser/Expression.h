@@ -16,29 +16,6 @@
 // graph_t* graph_alloc(vsize_t max_size);
 // void graph_free(graph_t* graph);
 
-/**
- * @brief The operation type
- */
-typedef enum tagEOperationType
-{
-    eVALUE,
-    eMULTIPLY,
-    ePLUS,
-    eSTR
-} EOperationType;
-
-/**
- * @brief The expression structure
- */
-typedef struct tagSExpression
-{
-    EOperationType type;///< type of operation
-
-    int value;///< valid only when type is eVALUE
-    char* str_value;
-    struct tagSExpression *left; ///< left side of the tree
-    struct tagSExpression *right;///< right side of the tree
-} SExpression;
 
 typedef struct Couple
 {
